@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 56px;
+  margin-left: 24px;
+  margin-right: 20px;
+  align-items: center;
+  gap: 8px;
+}
+
+.container:first-of-type {
+  margin-left: 0;
+}
+
+.container:nth-of-type(2) {
+  padding-right: 112px;
+}
+
+.container:last-of-type {
+  padding-left: 288px;
+}
+
+.title {
+  color: #8585ad;
+}
+
+.title_active {
+  color: #f2f2f3;
+}

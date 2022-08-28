@@ -1,0 +1,17 @@
+.app {
+  margin: 0;
+  padding: 0;
+  background-color: #131316;
+  width: 100%;
+  height: 100vh;
+  color: #F2F2F3;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: 1256px;
+  margin: auto;
+}
+
