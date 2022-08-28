@@ -3,8 +3,26 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
+import PropTypes from 'prop-types';
 
+const ingredientsPropTypes = PropTypes.shape({
+    "_id": PropTypes.string.isRequired,
+    "name": PropTypes.string.isRequired,
+    "type": PropTypes.string.isRequired,
+    "proteins": PropTypes.number.isRequired,
+    "fat": PropTypes.number.isRequired,
+    "carbohydrates": PropTypes.number.isRequired,
+    "calories": PropTypes.number.isRequired,
+    "price": PropTypes.number.isRequired,
+    "image": PropTypes.string.isRequired,
+    "image_mobile": PropTypes.string,
+    "image_large": PropTypes.string,
+    "__v": PropTypes.number.isRequired
+  });
 
+  BurgerConstructor.propTypes = {
+    props: PropTypes.arrayOf(ingredientsPropTypes.isRequired)
+  }
 
 
 function BurgerConstructor(props) {
@@ -13,10 +31,10 @@ function BurgerConstructor(props) {
     let priceTotal = 0;
     return (
         <aside className={constructorStyles.sidebar}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div className={constructorStyles.list__container}>
                 <ul className={constructorStyles.list}>
 
-                    <li style={{ paddingRight: '35px', paddingLeft: '75px' }} >
+                    <li className={constructorStyles.list__item} >
                         <div className={constructorStyles.item} >
                             <ConstructorElement
                                 type="top"
@@ -47,7 +65,7 @@ function BurgerConstructor(props) {
                             })}
                         </ul>
                     </li>
-                    <li style={{ paddingRight: '35px', paddingLeft: '75px', marginTop: '12px' }}>
+                    <li className={constructorStyles.list__item}>
                         <div className={constructorStyles.item} >
                             <ConstructorElement
                                 type="bottom"
@@ -60,8 +78,8 @@ function BurgerConstructor(props) {
                     </li>
                 </ul>
             </div>
-            <div className={constructorStyles.container}>
-                <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center' }}>
+            <div className={constructorStyles.price__container}>
+                <div className={constructorStyles.price}>
                     <p className="text text_type_digits-medium">{priceTotal + 400}</p>
                     <CurrencyIcon type="primary" />
                 </div>
