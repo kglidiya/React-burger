@@ -9,8 +9,9 @@
 .title {
   margin-top: 10px;
 }
+
 .scroll {
-  height: 100vh;
+  height: 62vh;
   margin-bottom: 40px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -18,14 +19,15 @@
 
 .scroll::-webkit-scrollbar {
   width: 8px;
-  height: 492px;
 }
+
 .scroll::-webkit-scrollbar-track {
   background: #2f2f37;
 }
 
 .scroll::-webkit-scrollbar-thumb {
   background: #8585ad;
+  height: 492px;
 }
 
 .container {

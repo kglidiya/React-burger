@@ -5,6 +5,7 @@ import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
 import {ingredients} from '../utils/data'
 
 
+
 function App() {
   return (
     <div className={ appStyles.app }>

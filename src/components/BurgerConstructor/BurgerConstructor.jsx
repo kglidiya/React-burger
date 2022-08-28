@@ -6,7 +6,9 @@ import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-comp
 
 
 
+
 function BurgerConstructor(props) {
+
     const ingredients = props;
     let priceTotal = 0;
     return (

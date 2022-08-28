@@ -15,6 +15,7 @@
   height: 120px;
   padding-left: 20px;
   margin-bottom: 5px;
+  cursor: pointer;
 }
 
 .price {

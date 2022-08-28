@@ -4,6 +4,7 @@ import burgerStyles from './burgerIngredients.module.css';
 import Ingredient from "./Ingredient/Ingredient";
 
 
+
 function BurgerIngredients(props) {
  const ingredients = props;
 
