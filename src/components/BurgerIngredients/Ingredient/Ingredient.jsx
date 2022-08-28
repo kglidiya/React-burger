@@ -4,6 +4,7 @@ import ingredientsStyles from './ingredients.module.css';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 
+
 const ingredientsPropTypes = PropTypes.shape({
     "_id": PropTypes.string.isRequired,
     "name": PropTypes.string.isRequired,
@@ -19,11 +20,14 @@ const ingredientsPropTypes = PropTypes.shape({
     "__v": PropTypes.number.isRequired
   });
 
+
   Ingredient.propTypes = {
     props: ingredientsPropTypes.isRequired
 }
 
+
 function Ingredient(props) {
+
     const ingredients = props;
     const [isChosen, setIsChosen] = React.useState(false)
 

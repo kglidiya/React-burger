@@ -19,11 +19,13 @@ const ingredientsPropTypes = PropTypes.shape({
     "__v": PropTypes.number.isRequired
   });
 
+
 BurgerIngredients.propTypes = {
     props: PropTypes.arrayOf(ingredientsPropTypes.isRequired)
 }
 
 function BurgerIngredients(props) {
+
  const ingredients = props;
 
     const [current, setCurrent] = React.useState('one')
@@ -43,6 +45,7 @@ function BurgerIngredients(props) {
                     Начинки
                 </Tab>
             </section>
+
             <div className={burgerStyles.scroll}>
                 <section>
                     <h2 className="text text_type_main-medium pb-2 pt-5 mb-5 mt-5"> Булки</h2>
@@ -54,6 +57,7 @@ function BurgerIngredients(props) {
                         })}
                     </div>
                 </section>
+
                 <section>
                     <h2 className="text text_type_main-medium mb-5 pb-2"> Соусы</h2>
                     <div className={burgerStyles.container}>
@@ -64,6 +68,7 @@ function BurgerIngredients(props) {
                         })}
                     </div>
                 </section>
+
                 <section>
                     <h2 className="text text_type_main-medium pb-2 pt-5 mb-5 mt-5"> Начинки</h2>
                     <div className={burgerStyles.container}>
@@ -74,10 +79,11 @@ function BurgerIngredients(props) {
                         })}
                     </div>
                 </section>
+
             </div>
         </main>
-
     )
 }
+
 
 export default BurgerIngredients;

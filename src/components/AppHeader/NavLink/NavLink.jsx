@@ -14,7 +14,9 @@ NavLink.propTypes = {
 }
 
 function NavLink(props) {
+
   return (
+
     <li className={linkStyles.container}
       onClick={() => {
         props.onClick(props.value)
@@ -27,6 +29,8 @@ function NavLink(props) {
       </h3>
     </li>
   );
+
 }
+
 
 export default NavLink;

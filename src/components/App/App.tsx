@@ -4,7 +4,6 @@ import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
 import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
 import {ingredients} from '../utils/data'
 
-
 function App() {
   return (
     <div className={ appStyles.app }>
@@ -16,5 +15,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

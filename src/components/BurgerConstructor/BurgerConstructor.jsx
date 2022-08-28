@@ -29,6 +29,7 @@ function BurgerConstructor(props) {
 
     const ingredients = props;
     let priceTotal = 0;
+
     return (
         <aside className={constructorStyles.sidebar}>
             <div className={constructorStyles.list__container}>
@@ -65,6 +66,7 @@ function BurgerConstructor(props) {
                             })}
                         </ul>
                     </li>
+
                     <li className={constructorStyles.list__item}>
                         <div className={constructorStyles.item} >
                             <ConstructorElement
@@ -78,6 +80,7 @@ function BurgerConstructor(props) {
                     </li>
                 </ul>
             </div>
+
             <div className={constructorStyles.price__container}>
                 <div className={constructorStyles.price}>
                     <p className="text text_type_digits-medium">{priceTotal + 400}</p>
@@ -87,8 +90,10 @@ function BurgerConstructor(props) {
                     Оформить заказ
                 </Button>
             </div>
+
         </aside>
     )
 }
+
 
 export default BurgerConstructor;
