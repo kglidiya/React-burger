@@ -2,7 +2,7 @@ import { type } from '@testing-library/user-event/dist/type';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/App/App';
-
+import AppModal from './components/Modal/Modal';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

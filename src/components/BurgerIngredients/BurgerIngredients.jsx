@@ -3,31 +3,17 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerStyles from './burgerIngredients.module.css';
 import Ingredient from "./Ingredient/Ingredient";
 import PropTypes from 'prop-types';
-
-const ingredientsPropTypes = PropTypes.shape({
-    "_id": PropTypes.string.isRequired,
-    "name": PropTypes.string.isRequired,
-    "type": PropTypes.string.isRequired,
-    "proteins": PropTypes.number.isRequired,
-    "fat": PropTypes.number.isRequired,
-    "carbohydrates": PropTypes.number.isRequired,
-    "calories": PropTypes.number.isRequired,
-    "price": PropTypes.number.isRequired,
-    "image": PropTypes.string.isRequired,
-    "image_mobile": PropTypes.string,
-    "image_large": PropTypes.string,
-    "__v": PropTypes.number.isRequired
-  });
+import {ingredientType} from '../utils/types'
 
 
 BurgerIngredients.propTypes = {
-    props: PropTypes.arrayOf(ingredientsPropTypes.isRequired)
+    openPopup: PropTypes.func,
+    ingredientsData: PropTypes.arrayOf(ingredientType.isRequired),
+    onclick: PropTypes.func
 }
 
-function BurgerIngredients(props) {
-
- const ingredients = props;
-
+function BurgerIngredients({openPopup, ingredientsData, onClick}) {
+   
     const [current, setCurrent] = React.useState('one')
 
     return (
@@ -47,12 +33,12 @@ function BurgerIngredients(props) {
             </section>
 
             <div className={burgerStyles.scroll}>
-                <section>
+            <section>
                     <h2 className="text text_type_main-medium pb-2 pt-5 mb-5 mt-5"> Булки</h2>
                     <div className={burgerStyles.container}>
-                        {ingredients.props.map(ingredient => {
-                            if (ingredient.type === 'bun') {
-                                return <Ingredient props={ingredient} key={ingredient._id} />
+                        {ingredientsData.map(item => {
+                            if (item.type === 'bun') {
+                                return <Ingredient ingredient={item} key={item._id} openPopup={openPopup} getCurrentIngredient={onClick} />
                             }
                         })}
                     </div>
@@ -61,9 +47,9 @@ function BurgerIngredients(props) {
                 <section>
                     <h2 className="text text_type_main-medium mb-5 pb-2"> Соусы</h2>
                     <div className={burgerStyles.container}>
-                        {ingredients.props.map(ingredient => {
-                            if (ingredient.type === 'sauce') {
-                                return <Ingredient props={ingredient} key={ingredient._id} />
+                        {ingredientsData.map(item => {
+                            if (item.type === 'sauce') {
+                                return <Ingredient ingredient={item} key={item._id} openPopup={openPopup} getCurrentIngredient={onClick} />
                             }
                         })}
                     </div>
@@ -72,9 +58,9 @@ function BurgerIngredients(props) {
                 <section>
                     <h2 className="text text_type_main-medium pb-2 pt-5 mb-5 mt-5"> Начинки</h2>
                     <div className={burgerStyles.container}>
-                        {ingredients.props.map(ingredient => {
-                            if (ingredient.type === 'main') {
-                                return <Ingredient props={ingredient} key={ingredient._id} />
+                        {ingredientsData.map(item => {
+                            if (item.type === 'main') {
+                                return <Ingredient ingredient={item} key={item._id} openPopup={openPopup} getCurrentIngredient={onClick} />
                             }
                         })}
                     </div>

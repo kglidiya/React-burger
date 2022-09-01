@@ -1,13 +1,7 @@
 import linkStyles from "./link.module.css";
 import PropTypes from 'prop-types';
+import {navLinkPropTypes} from '../../utils/types'
 
-const navLinkPropTypes = PropTypes.shape({
-  value: PropTypes.PropTypes.string.isRequired,
-  active: PropTypes.bool.isRequired,
-  iconPrimary: PropTypes.elementType.isRequired,
-  iconSecondary: PropTypes.elementType.isRequired,
-  onClick: PropTypes.func.isRequired
-});
 
 NavLink.propTypes = {
   props: PropTypes.objectOf(navLinkPropTypes.isRequired)

@@ -4,30 +4,16 @@ import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-
-const ingredientsPropTypes = PropTypes.shape({
-    "_id": PropTypes.string.isRequired,
-    "name": PropTypes.string.isRequired,
-    "type": PropTypes.string.isRequired,
-    "proteins": PropTypes.number.isRequired,
-    "fat": PropTypes.number.isRequired,
-    "carbohydrates": PropTypes.number.isRequired,
-    "calories": PropTypes.number.isRequired,
-    "price": PropTypes.number.isRequired,
-    "image": PropTypes.string.isRequired,
-    "image_mobile": PropTypes.string,
-    "image_large": PropTypes.string,
-    "__v": PropTypes.number.isRequired
-  });
-
-  BurgerConstructor.propTypes = {
-    props: PropTypes.arrayOf(ingredientsPropTypes.isRequired)
-  }
+import { ingredientType } from '../utils/types';
 
 
-function BurgerConstructor(props) {
+BurgerConstructor.propTypes = {
+    openPopup: PropTypes.func.isRequired,
+    ingredientsData: PropTypes.arrayOf(ingredientType.isRequired),
+};
 
-    const ingredients = props;
+function BurgerConstructor({ openPopup, ingredientsData }) {
+
     let priceTotal = 0;
 
     return (
@@ -37,20 +23,29 @@ function BurgerConstructor(props) {
 
                     <li className={constructorStyles.list__item} >
                         <div className={constructorStyles.item} >
-                            <ConstructorElement
-                                type="top"
-                                isLocked={true}
-                                text="Краторная булка N-200i (верх)"
-                                price={200}
-                                thumbnail={ingredients.props[0].image}
-                            />
+                            {ingredientsData.map(item => {
+                                if (item.name === 'Краторная булка N-200i') {
+                                    return (
+                                        <ConstructorElement
+                                            type="top"
+                                            isLocked={true}
+                                            text={`${item.name} (верх)`}
+                                            price={item.price}
+                                            thumbnail={item.image}
+                                            key={item._id}
+                                        />
+                                    )
+                                }
+                            })
+                            }
+
+
                         </div>
                     </li>
                     <li >
                         <ul className={constructorStyles.scroll}>
-                            {ingredients.props.map(item => {
+                            {ingredientsData.map(item => {
                                 priceTotal += item.price;
-
                                 if (item.type === 'main' || item.type === 'sauce') {
                                     return (
                                         <li className={constructorStyles.item} key={item._id}>
@@ -69,13 +64,21 @@ function BurgerConstructor(props) {
 
                     <li className={constructorStyles.list__item}>
                         <div className={constructorStyles.item} >
-                            <ConstructorElement
-                                type="bottom"
-                                isLocked={true}
-                                text="Краторная булка N-200i (низ)"
-                                price={200}
-                                thumbnail={ingredients.props[0].image}
-                            />
+                            {ingredientsData.map(item => {
+                                if (item.name === 'Краторная булка N-200i') {
+                                    return (
+                                        <ConstructorElement
+                                            type="bottom"
+                                            isLocked={true}
+                                            text={`${item.name} (низ)`}
+                                            price={item.price}
+                                            thumbnail={item.image}
+                                            key={item._id}
+                                        />
+                                    )
+                                }
+                            })
+                            }
                         </div>
                     </li>
                 </ul>
@@ -86,7 +89,9 @@ function BurgerConstructor(props) {
                     <p className="text text_type_digits-medium">{priceTotal + 400}</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button type="primary" size="medium">
+                <Button type="primary" size="medium" onClick={() => {
+                    openPopup('OrderPopup')
+                }}>
                     Оформить заказ
                 </Button>
             </div>

@@ -1,0 +1,30 @@
+.container {
+    width: 720px;
+    background-color: #1C1C21;
+    border-radius: 40px;
+    position: fixed;
+    z-index: 5;
+    position: relative;
+}
+
+.button_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin-top: 60px;
+    margin-left: 40px;
+    margin-right: 40px;
+  
+}
+
+.closeBtn {
+  top: 60px;
+  right: 43px;
+  position: absolute;
+  background: transparent;
+  border: none;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
