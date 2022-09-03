@@ -51,10 +51,11 @@ function App() {
   const { isLoading, hasError, ingredients } = state;
 
   //Set current ingredient in modalIngredient
-  const [currentIngredient, setCurrent] = React.useState()
+  const [currentIngredient, setCurrent] = React.useState(null);
 
   //Modals open/close
   const [currentModal, setCurrentModal] = React.useState('');
+
 
   return (
 
@@ -76,10 +77,16 @@ function App() {
         }
       </main>
 
-      <Modal isOpen={currentModal === 'IngredientPopup'} onClose={setCurrentModal} height={'538px'}>
-        <IngredientDetails ingredientsData={ingredients} currentIngredient={currentIngredient} />
+      <Modal 
+      isOpen={currentModal === 'IngredientPopup'} 
+      onClose={setCurrentModal} 
+      height={'538px'}>
+        <IngredientDetails currentIngredient={currentIngredient} />
       </Modal>
-      <Modal isOpen={currentModal === 'OrderPopup'} onClose={setCurrentModal} height={'718px'}>
+      <Modal 
+      isOpen={currentModal === 'OrderPopup'} 
+      onClose={setCurrentModal} 
+      height={'718px'}>
         <OrderDetails />
       </Modal>
     </div>

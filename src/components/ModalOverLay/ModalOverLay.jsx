@@ -3,15 +3,26 @@ import PropTypes from 'prop-types';
 
 ModalOverLay.propTypes = {
     children: PropTypes.element.isRequired,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
+    isOpen: PropTypes.bool.isRequired,
+    animation: PropTypes.string.isRequired,
+    setAnimation: PropTypes.func.isRequired
 };
 
-function ModalOverLay({ children, onClick}) {
+function ModalOverLay({ children, onClick, animation, setAnimation }) {
 
     return (
-        <>
-            <div onClick={onClick} className={overlayStyles.overlay}>{children}</div>
-        </>
+        <div onClick={(e) => {
+            if (e.target === e.currentTarget) {
+                setAnimation('fadeOut')
+                setTimeout(() => {
+                    setAnimation('fadeIn')
+                    onClick()
+                }, 400)
+
+            }
+        }} className={`${overlayStyles.overlay} ${overlayStyles[animation]}`}
+        >{children}</div>
     )
 }
 

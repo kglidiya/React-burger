@@ -4,12 +4,12 @@ import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import { ingredientType } from '../utils/types';
+import { ingredientType } from '../../utils/types';
 
 
 BurgerConstructor.propTypes = {
     openPopup: PropTypes.func.isRequired,
-    ingredientsData: PropTypes.arrayOf(ingredientType.isRequired),
+    ingredientsData: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
 function BurgerConstructor({ openPopup, ingredientsData }) {

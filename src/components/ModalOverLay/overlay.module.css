@@ -1,7 +1,28 @@
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+
+  from {visibility: hidden; }
+  to { visibility: visible; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+
+  from {visibility: visible; }
+  to { visibility: hidden; }
+}		
+
+.fadeIn {
+  animation: fadeIn .4s linear;
+}
+
+.fadeOut {
+  animation: fadeOut .4s linear;
+}
+
 .overlay {
-  opacity: 1;
-  visibility: visible;
-  transition: visibility 0.5s, opacity 0.5s linear;
   display: flex;
   position: fixed;
   overflow: auto;
@@ -14,3 +35,4 @@
   justify-content: center;
   align-items: center;
 }
+

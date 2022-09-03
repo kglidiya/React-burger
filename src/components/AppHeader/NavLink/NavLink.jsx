@@ -1,6 +1,6 @@
 import linkStyles from "./link.module.css";
 import PropTypes from 'prop-types';
-import {navLinkPropTypes} from '../../utils/types'
+import {navLinkPropTypes} from '../../../utils/types'
 
 
 NavLink.propTypes = {
