@@ -15,11 +15,11 @@
 }		
 
 .fadeIn {
-  animation: fadeIn .4s linear;
+  animation: fadeIn .7s linear;
 }
 
 .fadeOut {
-  animation: fadeOut .4s linear;
+  animation: fadeOut .7s linear;
 }
 
 .overlay {

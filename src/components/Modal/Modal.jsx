@@ -17,14 +17,18 @@ const modalRoot = document.getElementById("react-modals");
 
 function Modal({ isOpen, children, onClose, height }) {
 
+  function closePopup() {
+    setAnimation('fadeOut')
+    setTimeout(() => {
+      setAnimation('fadeIn')
+      onClose()
+    }, 400)
+  }
+
   React.useEffect(() => {
     function closeByEscape(evt) {
       if (evt.key === 'Escape') {
-        setAnimation('fadeOut')
-        setTimeout(() => {
-          setAnimation('fadeIn')
-          onClose()
-        }, 300)
+        closePopup()
       }
     }
     if (isOpen) {
@@ -42,20 +46,13 @@ function Modal({ isOpen, children, onClose, height }) {
   return ReactDOM.createPortal(
 
     <ModalOverLay
-      onClick={onClose}
+      closePopup={closePopup}
       isOpen={isOpen}
       animation={animation}
-      setAnimation={setAnimation}
     >
       <div className={modal.container} style={{ height: height }}>
         {children}
-        <button onClick={() => {
-          setAnimation('fadeOut')
-          setTimeout(() => {
-            setAnimation('fadeIn')
-            onClose()
-          }, 400)
-        }}
+        <button onClick={closePopup}
           className={modal.closeBtn}>
           <CloseIcon type="primary" /></button>
       </div>

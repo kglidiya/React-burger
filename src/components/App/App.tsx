@@ -40,7 +40,6 @@ function App() {
         ...state,
         hasError: true,
       });
-      return Promise.reject(console.log(`Произошла ошибка: ${error}`));
     }
   };
 

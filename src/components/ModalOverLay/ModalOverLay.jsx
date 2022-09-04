@@ -3,23 +3,17 @@ import PropTypes from 'prop-types';
 
 ModalOverLay.propTypes = {
     children: PropTypes.element.isRequired,
-    onClick: PropTypes.func.isRequired,
+    closePopup: PropTypes.func.isRequired,
     isOpen: PropTypes.bool.isRequired,
     animation: PropTypes.string.isRequired,
-    setAnimation: PropTypes.func.isRequired
 };
 
-function ModalOverLay({ children, onClick, animation, setAnimation }) {
+function ModalOverLay({ children, closePopup, animation }) {
 
     return (
         <div onClick={(e) => {
             if (e.target === e.currentTarget) {
-                setAnimation('fadeOut')
-                setTimeout(() => {
-                    setAnimation('fadeIn')
-                    onClick()
-                }, 400)
-
+                closePopup()
             }
         }} className={`${overlayStyles.overlay} ${overlayStyles[animation]}`}
         >{children}</div>
