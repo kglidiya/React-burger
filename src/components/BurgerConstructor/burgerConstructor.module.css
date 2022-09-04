@@ -4,6 +4,12 @@
   margin-top: 49px;
 }
 
+.list__container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .list {
   list-style: none;
   padding-left: 0;
@@ -11,7 +17,18 @@
   flex-direction: column;
 }
 
-.item {
+.list__item:first-of-type {
+ padding-right: 35px;
+ padding-left: 75px;
+}
+
+.list__item:last-of-type {
+ padding-right: 35px;
+ padding-left: 75px;
+ margin-top: 12px;
+}
+
+.item{
   display: flex;
   flex-direction: row;
   gap: 13.5px;
@@ -21,7 +38,7 @@
 }
 
 .scroll {
-  height: 464px;
+  height: 367px;
   overflow-y: auto;
   margin-right: 15px;
   padding-right: 15px;
@@ -41,7 +58,7 @@
   height: 292px;
 }
 
-.container {
+.price__container {
   display: flex;
   flex-direction: row;
   gap: 42px;

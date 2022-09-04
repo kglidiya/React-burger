@@ -1,0 +1,18 @@
+.title {
+  margin: 7px;
+  text-shadow: 0 4px 32px rgba(51, 51, 255, 0.5),
+    0 0 8px rgba(51, 51, 255, 0.25),
+    0 0 16px rgba(51, 51, 255, 0.25);
+}
+
+.container {
+  text-align: center;
+  margin: 120px 100px 120px 100px;
+}
+
+.icon {
+  width: 120px;
+  height: 120px;
+  margin-top: 57px;
+  margin-bottom: 40px;
+}
