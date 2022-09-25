@@ -1,10 +1,13 @@
 import orderDetailsStyles from './order.module.css';
 import icon from '../../images/done.svg';
+import PropTypes from 'prop-types';
 
+OrderDetails.propTypes = {
+    orderNumber: PropTypes.number.isRequired,
+}
 
-function OrderDetails() {
+function OrderDetails({orderNumber}) {
 
-    const orderNumber = '034536';
     
     return (
   
