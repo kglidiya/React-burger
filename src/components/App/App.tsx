@@ -8,7 +8,7 @@ import Modal from '../Modal/Modal';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import OrderDetails from '../OrderDetails/OrderDetails';
 import { BurgerContext } from '../../services/BurgerContext';
-const config = 'https://norma.nomoreparties.space/api/ingredients'
+import {INGEDIENTS_API} from '../../utils/api'
 
 const priceInitialState = { price: 0 }
 function reducer(state: any, action: any) {
@@ -35,7 +35,7 @@ function App() {
   const getIndredientsData = async () => {
     try {
       setState({ ...state, isLoading: true });
-      await fetch(config)
+      await fetch(INGEDIENTS_API)
         .then(res => {
           if (res.ok) {
             return res.json()
@@ -71,7 +71,6 @@ function App() {
 
   const [orderNumber, setOrderNumber] = useState(0);
 
-  const value = ingredients;
 
   return (
 
@@ -89,7 +88,7 @@ function App() {
         {hasError && 'Произошла ошибка'}
         {!isLoading &&
           !hasError &&
-          <BurgerContext.Provider value={value}>
+          <BurgerContext.Provider value={ingredients}>
           <BurgerConstructor openPopup={setCurrentModal} priceState={priceState} priceDispatcher={priceDispatcher}
           setOrderNumber={setOrderNumber} />
           </BurgerContext.Provider>

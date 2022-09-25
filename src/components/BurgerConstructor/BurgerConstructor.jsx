@@ -6,7 +6,8 @@ import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-comp
 import PropTypes from 'prop-types';
 import React from 'react';
 import { BurgerContext } from '../../services/BurgerContext';
-const url = 'https://norma.nomoreparties.space/api/orders';
+import { useContext } from 'react';
+import { ORDERS_API } from '../../utils/api'
 
 
 BurgerConstructor.propTypes = {
@@ -19,10 +20,21 @@ BurgerConstructor.propTypes = {
 
 function BurgerConstructor({ openPopup, priceState, priceDispatcher, setOrderNumber }) {
 
-    const ingredientsData = React.useContext(BurgerContext);
+    const ingredientsData = useContext(BurgerContext);
 
-    const ingredientsId = [];
-    ingredientsData.forEach(el => ingredientsId.push(el._id))
+    let ingredientsId = [];
+
+    function getIngredientsId() {
+        ingredientsData.forEach(el => {
+            if (el.type !== 'bun') {
+                ingredientsId.push(el._id)
+            } else if (el.name === 'Краторная булка N-200i') {
+                ingredientsId.unshift(el._id)
+            }
+        })
+    
+        return ingredientsId.concat(ingredientsId[0])
+    }
 
 
     React.useEffect(() => {
@@ -34,12 +46,12 @@ function BurgerConstructor({ openPopup, priceState, priceDispatcher, setOrderNum
                 priceDispatcher({ type: 'set', payload: priceState.price += item.price })
             }
         })
-    }, []);
+    }, [ingredientsData]);
 
 
     const getOrderNumber = async () => {
         try {
-            await fetch(url, {
+            await fetch(ORDERS_API, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
@@ -53,7 +65,11 @@ function BurgerConstructor({ openPopup, priceState, priceDispatcher, setOrderNum
                     return Promise.reject(res.status);
                 })
                 .then(data => {
-                    setOrderNumber(data.order.number)
+                    if (data.success === true) {
+                        openPopup('OrderPopup');
+                        setOrderNumber(data.order.number)
+                    } else return false
+                    
                 })
         } catch (error) {
             console.log(`Error: ${error}`)
@@ -138,9 +154,9 @@ function BurgerConstructor({ openPopup, priceState, priceDispatcher, setOrderNum
                     <CurrencyIcon type="primary" />
                 </div>
                 <Button type="primary" size="medium" onClick={() => {
-                    openPopup('OrderPopup');
+                    getIngredientsId()
                     getOrderNumber()
-                }}>
+                    }}>
                     Оформить заказ
                 </Button>
             </div>
