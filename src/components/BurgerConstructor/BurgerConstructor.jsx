@@ -4,17 +4,77 @@ import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import { ingredientType } from '../../utils/types';
+import React from 'react';
+import { BurgerContext } from '../../services/BurgerContext';
+import { useContext } from 'react';
+import { ORDERS_API } from '../../utils/api'
 
 
 BurgerConstructor.propTypes = {
     openPopup: PropTypes.func.isRequired,
-    ingredientsData: PropTypes.arrayOf(ingredientType).isRequired,
+    priceState: PropTypes.objectOf(PropTypes.number).isRequired,
+    priceDispatcher: PropTypes.func.isRequired,
+    setOrderNumber: PropTypes.func.isRequired
 };
 
-function BurgerConstructor({ openPopup, ingredientsData }) {
 
-    let priceTotal = 0;
+function BurgerConstructor({ openPopup, priceState, priceDispatcher, setOrderNumber }) {
+
+    const ingredientsData = useContext(BurgerContext);
+
+    let ingredientsId = [];
+
+    function getIngredientsId() {
+        ingredientsData.forEach(el => {
+            if (el.type !== 'bun') {
+                ingredientsId.push(el._id)
+            } else if (el.name === 'Краторная булка N-200i') {
+                ingredientsId.unshift(el._id)
+            }
+        })
+    
+        return ingredientsId.concat(ingredientsId[0])
+    }
+
+
+    React.useEffect(() => {
+        ingredientsData.forEach(item => {
+            if (item.name === 'Краторная булка N-200i') {
+                priceDispatcher({ type: 'set', payload: priceState.price += item.price * 2 })
+            }
+            else if (item.name !== 'Краторная булка N-200i') {
+                priceDispatcher({ type: 'set', payload: priceState.price += item.price })
+            }
+        })
+    }, [ingredientsData]);
+
+
+    const getOrderNumber = async () => {
+        try {
+            await fetch(ORDERS_API, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify({ ingredients: ingredientsId })
+            })
+                .then(res => {
+                    if (res.ok) {
+                        return res.json()
+                    }
+                    return Promise.reject(res.status);
+                })
+                .then(data => {
+                    if (data.success === true) {
+                        openPopup('OrderPopup');
+                        setOrderNumber(data.order.number)
+                    } else return false
+                    
+                })
+        } catch (error) {
+            console.log(`Error: ${error}`)
+        }
+    };
 
     return (
         <aside className={constructorStyles.sidebar}>
@@ -24,9 +84,12 @@ function BurgerConstructor({ openPopup, ingredientsData }) {
                     <li className={constructorStyles.list__item} >
                         <div className={constructorStyles.item} >
                             {ingredientsData.map(item => {
+
                                 if (item.name === 'Краторная булка N-200i') {
                                     return (
                                         <ConstructorElement
+
+
                                             type="top"
                                             isLocked={true}
                                             text={`${item.name} (верх)`}
@@ -45,12 +108,13 @@ function BurgerConstructor({ openPopup, ingredientsData }) {
                     <li >
                         <ul className={constructorStyles.scroll}>
                             {ingredientsData.map(item => {
-                                priceTotal += item.price;
+
                                 if (item.type === 'main' || item.type === 'sauce') {
                                     return (
                                         <li className={constructorStyles.item} key={item._id}>
                                             <DragIcon type="primary" />
                                             <ConstructorElement
+
                                                 text={item.name}
                                                 price={item.price}
                                                 thumbnail={item.image}
@@ -86,12 +150,13 @@ function BurgerConstructor({ openPopup, ingredientsData }) {
 
             <div className={constructorStyles.price__container}>
                 <div className={constructorStyles.price}>
-                    <p className="text text_type_digits-medium">{priceTotal + 400}</p>
+                    <p className="text text_type_digits-medium">{priceState.price}</p>
                     <CurrencyIcon type="primary" />
                 </div>
                 <Button type="primary" size="medium" onClick={() => {
-                    openPopup('OrderPopup')
-                }}>
+                    getIngredientsId()
+                    getOrderNumber()
+                    }}>
                     Оформить заказ
                 </Button>
             </div>

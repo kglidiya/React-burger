@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useReducer } from 'react';
 import React from 'react';
 import appStyles from './app.module.css';
 import AppHeader from '../AppHeader/AppHeader';
@@ -7,9 +7,23 @@ import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
 import Modal from '../Modal/Modal';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import OrderDetails from '../OrderDetails/OrderDetails';
-const config = 'https://norma.nomoreparties.space/api/ingredients'
+import { BurgerContext } from '../../services/BurgerContext';
+import {INGEDIENTS_API} from '../../utils/api'
+
+const priceInitialState = { price: 0 }
+function reducer(state: any, action: any) {
+    switch (action.type) {
+      case "set":
+        return { price: action.payload };
+      case "reset":
+        return priceInitialState;
+      default:
+        throw new Error(`Wrong type of action: ${action.type}`);
+    }
+  } 
 
 function App() {
+  const [priceState, priceDispatcher] = useReducer(reducer, priceInitialState, undefined)
 
   const [state, setState] = useState({
     isLoading: false,
@@ -21,7 +35,7 @@ function App() {
   const getIndredientsData = async () => {
     try {
       setState({ ...state, isLoading: true });
-      await fetch(config)
+      await fetch(INGEDIENTS_API)
         .then(res => {
           if (res.ok) {
             return res.json()
@@ -55,6 +69,8 @@ function App() {
   //Modals open/close
   const [currentModal, setCurrentModal] = React.useState('');
 
+  const [orderNumber, setOrderNumber] = useState(0);
+
 
   return (
 
@@ -66,13 +82,16 @@ function App() {
         {hasError && 'Произошла ошибка'}
         {!isLoading &&
           !hasError &&
-          <BurgerIngredients openPopup={setCurrentModal} ingredientsData={ingredients} onClick={setCurrent} />
+          <BurgerIngredients openPopup={setCurrentModal} ingredientsData={ingredients} onClick={setCurrent}/>
         }
         {isLoading && 'Загрузка...'}
         {hasError && 'Произошла ошибка'}
         {!isLoading &&
           !hasError &&
-          <BurgerConstructor openPopup={setCurrentModal} ingredientsData={ingredients} />
+          <BurgerContext.Provider value={ingredients}>
+          <BurgerConstructor openPopup={setCurrentModal} priceState={priceState} priceDispatcher={priceDispatcher}
+          setOrderNumber={setOrderNumber} />
+          </BurgerContext.Provider>
         }
       </main>
 
@@ -86,7 +105,8 @@ function App() {
       isOpen={currentModal === 'OrderPopup'} 
       onClose={setCurrentModal} 
       height={'718px'}>
-        <OrderDetails />
+    
+        <OrderDetails orderNumber={orderNumber}/>
       </Modal>
     </div>
 
