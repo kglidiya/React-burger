@@ -1,162 +1,155 @@
-import constructorStyles from './burgerConstructor.module.css';
+import constructorStyles from './BurgerConstructor.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { BurgerContext } from '../../services/BurgerContext';
-import { useContext } from 'react';
-import { ORDERS_API } from '../../utils/api'
-
+import { useDrop, } from "react-dnd";
+import { useDispatch, useSelector } from 'react-redux';
+import ConstructorItem from './ConstructorItem'
+import {
+    deleteItem,
+    setOrderDetails,
+    getOrderNumber,
+    swapItems
+} from '../../services/actions';
 
 BurgerConstructor.propTypes = {
     openPopup: PropTypes.func.isRequired,
-    priceState: PropTypes.objectOf(PropTypes.number).isRequired,
-    priceDispatcher: PropTypes.func.isRequired,
-    setOrderNumber: PropTypes.func.isRequired
+    onDropHandler: PropTypes.func.isRequired
 };
 
 
-function BurgerConstructor({ openPopup, priceState, priceDispatcher, setOrderNumber }) {
+function BurgerConstructor({ openPopup, onDropHandler }) {
+    const dispatch = useDispatch();
+    const ingrediendsConstructor = useSelector((state) => state.draggableIngredientReducer.draggedElement);
 
-    const ingredientsData = useContext(BurgerContext);
+    const listRef = React.useRef([]);
+    let priceTotal = 0;
+    const ingredientsIds = []
 
-    let ingredientsId = [];
+    const [price, setPrice] = React.useState(0);
 
-    function getIngredientsId() {
-        ingredientsData.forEach(el => {
-            if (el.type !== 'bun') {
-                ingredientsId.push(el._id)
-            } else if (el.name === 'Краторная булка N-200i') {
-                ingredientsId.unshift(el._id)
+    const [{ didDrop }, dropTarget] = useDrop({
+        accept: "ingredient",
+        drop(itemId) {
+            onDropHandler(itemId);
+        },
+        collect: monitor => ({
+            didDrop: monitor.didDrop()
+        })
+    });
+
+    function deleteIngredient(e) {
+        ingrediendsConstructor.map((el, i) => {
+
+            if (listRef.current[i].contains(e.target)
+                && e.target.closest('div').childNodes[0].childNodes[1].textContent === el.name) {
+                dispatch(deleteItem(i))
             }
         })
-    
-        return ingredientsId.concat(ingredientsId[0])
     }
 
+    function getIngredientsId() {
+        ingrediendsConstructor.map(el => {
+            ingredientsIds.push(el._id)
+        })
+    }
 
     React.useEffect(() => {
-        ingredientsData.forEach(item => {
-            if (item.name === 'Краторная булка N-200i') {
-                priceDispatcher({ type: 'set', payload: priceState.price += item.price * 2 })
-            }
-            else if (item.name !== 'Краторная булка N-200i') {
-                priceDispatcher({ type: 'set', payload: priceState.price += item.price })
-            }
+        ingrediendsConstructor.forEach((el) => {
+            priceTotal += el.price;
+            setPrice(priceTotal)
         })
-    }, [ingredientsData]);
+        dispatch(setOrderDetails(ingredientsIds))
+    }, [didDrop, ingrediendsConstructor.length])
 
+    const movePetListItem = React.useCallback(
+        (dragIndex, hoverIndex) => {
+            dispatch(swapItems(dragIndex, hoverIndex))
+        },
+        [ingrediendsConstructor]
 
-    const getOrderNumber = async () => {
-        try {
-            await fetch(ORDERS_API, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body: JSON.stringify({ ingredients: ingredientsId })
-            })
-                .then(res => {
-                    if (res.ok) {
-                        return res.json()
-                    }
-                    return Promise.reject(res.status);
-                })
-                .then(data => {
-                    if (data.success === true) {
-                        openPopup('OrderPopup');
-                        setOrderNumber(data.order.number)
-                    } else return false
-                    
-                })
-        } catch (error) {
-            console.log(`Error: ${error}`)
-        }
-    };
+    )
+
 
     return (
         <aside className={constructorStyles.sidebar}>
-            <div className={constructorStyles.list__container}>
-                <ul className={constructorStyles.list}>
-
-                    <li className={constructorStyles.list__item} >
-                        <div className={constructorStyles.item} >
-                            {ingredientsData.map(item => {
-
-                                if (item.name === 'Краторная булка N-200i') {
-                                    return (
+            <div className={constructorStyles.list__container} ref={dropTarget}>
+                <ul className={constructorStyles.list} >
+                    <li className={constructorStyles.list__item}  >
+                        {ingrediendsConstructor.map((item, i, arr) => {
+                            if (item.type === 'bun' && i === 0) {
+                                return (
+                                    <div className={constructorStyles.item} key={i}
+                                        ref={(ref) => (listRef.current[i] = ref)}
+                                    >
                                         <ConstructorElement
-
-
                                             type="top"
                                             isLocked={true}
                                             text={`${item.name} (верх)`}
                                             price={item.price}
                                             thumbnail={item.image}
-                                            key={item._id}
                                         />
-                                    )
-                                }
-                            })
+                                    </div>
+                                )
                             }
-
-
-                        </div>
+                        })
+                        }
                     </li>
-                    <li >
-                        <ul className={constructorStyles.scroll}>
-                            {ingredientsData.map(item => {
 
+                    <li >
+                        <ul className={constructorStyles.scroll} >
+                            {ingrediendsConstructor.map((item, i) => {
                                 if (item.type === 'main' || item.type === 'sauce') {
                                     return (
-                                        <li className={constructorStyles.item} key={item._id}>
-                                            <DragIcon type="primary" />
-                                            <ConstructorElement
-
-                                                text={item.name}
-                                                price={item.price}
-                                                thumbnail={item.image}
+                                        <li className={constructorStyles.drag__list} key={i}
+                                            ref={(ref) => (listRef.current[i] = ref)}
+                                        >
+                                            <ConstructorItem
+                                                deleteIngredient={deleteIngredient}
+                                                el={item}
+                                                index={i}
+                                                moveListItem={movePetListItem}
                                             />
                                         </li>
                                     )
                                 }
-                            })}
+                            })
+                            }
                         </ul>
                     </li>
 
-                    <li className={constructorStyles.list__item}>
-                        <div className={constructorStyles.item} >
-                            {ingredientsData.map(item => {
-                                if (item.name === 'Краторная булка N-200i') {
-                                    return (
+                    <li className={constructorStyles.list__item}  >
+                        {ingrediendsConstructor.map((item, i) => {
+                            if (item.type === 'bun' && i === 1) {
+                                return (
+                                    <div className={constructorStyles.item} key={i} ref={(ref) => (listRef.current[i] = ref)}>
                                         <ConstructorElement
                                             type="bottom"
                                             isLocked={true}
                                             text={`${item.name} (низ)`}
                                             price={item.price}
                                             thumbnail={item.image}
-                                            key={item._id}
                                         />
-                                    )
-                                }
-                            })
+                                    </div>
+                                )
                             }
-                        </div>
+                        })
+                        }
                     </li>
                 </ul>
             </div>
 
             <div className={constructorStyles.price__container}>
                 <div className={constructorStyles.price}>
-                    <p className="text text_type_digits-medium">{priceState.price}</p>
+                    <p className="text text_type_digits-medium">{price}</p>
                     <CurrencyIcon type="primary" />
                 </div>
                 <Button type="primary" size="medium" onClick={() => {
                     getIngredientsId()
-                    getOrderNumber()
-                    }}>
+                    dispatch(getOrderNumber(ingredientsIds, openPopup))
+                }}>
                     Оформить заказ
                 </Button>
             </div>

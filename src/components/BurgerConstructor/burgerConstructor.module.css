@@ -17,6 +17,10 @@
   flex-direction: column;
 }
 
+.drag__list {
+  list-style: none;
+}
+
 .list__item:first-of-type {
  padding-right: 35px;
  padding-left: 75px;
