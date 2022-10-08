@@ -2,13 +2,17 @@
   max-width: 635px;
   height: 696px;
   margin-top: 49px;
+
 }
 
 .list__container {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  border-radius: 50px;
+ 
 }
+
 
 .list {
   list-style: none;
@@ -19,6 +23,7 @@
 
 .drag__list {
   list-style: none;
+  cursor: grab;
 }
 
 .list__item:first-of-type {
@@ -39,6 +44,7 @@
   align-items: center;
   margin-bottom: 15px;
   float: right;
+  
 }
 
 .scroll {

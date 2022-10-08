@@ -3,7 +3,10 @@ import App from './components/App/App';
 import { Provider } from 'react-redux';
 import { compose, createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import { shopReducer, draggableIngredientReducer } from './services/reducers';
+import { orderReducer } from './services/orderReducer';
+import { ingredientsReducer } from './services/ingredientsReducer';
+import { constructorReducer } from './services/constructorReducer';
+import { currentIngredientReducer } from './services/currentIngredientReducer'
 
 const composeEnhancers =
   typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -13,8 +16,10 @@ const composeEnhancers =
 const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 const reducers = combineReducers({
-  shopReducer,
-  draggableIngredientReducer
+  ingredientsReducer,
+  constructorReducer,
+  currentIngredientReducer,
+  orderReducer
 })
 
 const store = createStore(

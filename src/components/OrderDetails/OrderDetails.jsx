@@ -5,7 +5,7 @@ import {useSelector } from 'react-redux';
 
 function OrderDetails() {
 
-    const orderNumber = useSelector(state => state.shopReducer.orderNumber);
+    const orderNumber = useSelector(state => state.orderReducer.orderNumber);
 
     
     return (

@@ -1,3 +1,4 @@
+import React from 'react';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ingredientsStyles from "./Ingredients.module.css";
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -8,21 +9,34 @@ import { setCurrentIngredient } from "../../../services/actions";
 
 import { useDrag } from "react-dnd";
 
-const Ingredient = ({ openPopup, ingredient }) => {
+const Ingredient = ({ openPopup, ingredient, setStyle }) => {
+
     const ingrediendsConstructor = useSelector(
-        (state) => state.draggableIngredientReducer.draggedElement
+        (state) => state.constructorReducer.constructor
     );
 
     const dispatch = useDispatch();
 
     const { _id, ...content } = ingredient;
 
-    const [, dragRef] = useDrag({
+    const [{ isDragging }, dragRef] = useDrag({
         type: "ingredient",
         item: { _id },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
     });
 
     let count = 0;
+
+    React.useEffect(() => {
+        if (isDragging) {
+            setStyle({
+                boxShadow: `inset 0 4px 20px rgba(51, 51, 255, 0.5),
+        inset 0 0 8px rgba(51, 51, 255, 0.25),
+        inset 0 0 8px rgba(51, 51, 255, 0.25)`})
+        } else setStyle()
+    }, [isDragging])
 
     return (
         <article ref={dragRef}
@@ -56,6 +70,7 @@ const Ingredient = ({ openPopup, ingredient }) => {
 Ingredient.propTypes = {
     openPopup: PropTypes.func.isRequired,
     ingredient: ingredientType.isRequired,
+    setStyle: PropTypes.func.isRequired
 };
 
 export default Ingredient;

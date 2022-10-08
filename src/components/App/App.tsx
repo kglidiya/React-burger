@@ -1,4 +1,4 @@
-import { useEffect, useState, useReducer } from 'react';
+import { useEffect } from 'react';
 import React from 'react';
 import appStyles from './App.module.css';
 import AppHeader from '../AppHeader/AppHeader';
@@ -10,7 +10,7 @@ import OrderDetails from '../OrderDetails/OrderDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { getAllItems } from '../../services/actions'
+import { getAllItems, setInitialConstructor } from '../../services/actions'
 
 
 function App() {
@@ -20,14 +20,21 @@ function App() {
   }, [])
 
   const state = useSelector((state: any) => state);
-  const ingredients = state.draggableIngredientReducer.data;
-  const isLoading = state.shopReducer.isLoading;
-  const hasError = state.shopReducer.hasError;
-  const ingrediendsConstructor = state.draggableIngredientReducer.draggedElement;
+  const ingredients = state.ingredientsReducer.ingredients;
+  const isLoading = state.ingredientsReducer.ingredientsRequest;
+  const hasError = state.ingredientsReducer.ingredientsError;
+  const ingrediendsConstructor = state.constructorReducer.constructor;
 
+
+  useEffect(() => {
+    dispatch(setInitialConstructor(ingredients))
+  }, [ingredients])
 
   //Modals open/close
   const [currentModal, setCurrentModal] = React.useState('');
+
+  //Highlighting active constructor border
+  const [style, setStyle] = React.useState<any | null>();
 
   const [ingredientsConstructor, setIngredientsConstructor] = React.useState([ingrediendsConstructor]);
 
@@ -35,10 +42,11 @@ function App() {
 
     setIngredientsConstructor([
       ...ingredientsConstructor,
-      ingrediendsConstructor.push(...ingredients.filter((element: any) => element._id === itemId._id && element.type !== 'bun'))
+      ingrediendsConstructor.splice(2, 0, ...ingredients.filter((element: any) => element._id === itemId._id && element.type !== 'bun'))
     ])
 
     ingredients.map((el: any) => {
+
       if (el.type === 'bun' && el._id === itemId._id) {
         setIngredientsConstructor([
           ingrediendsConstructor.splice(0, 2, el, el)
@@ -46,6 +54,7 @@ function App() {
       }
     })
   };
+
 
   return (
 
@@ -59,6 +68,7 @@ function App() {
             !hasError &&
             <BurgerIngredients
               openPopup={setCurrentModal}
+              setStyle={setStyle}
             />
           }
           {isLoading && 'Загрузка...'}
@@ -67,7 +77,8 @@ function App() {
             !hasError &&
             <BurgerConstructor
               openPopup={setCurrentModal}
-              onDropHandler={handleDrop} />
+              onDropHandler={handleDrop}
+              style={style} />
           }
         </main>
       </DndProvider>

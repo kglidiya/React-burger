@@ -4,11 +4,11 @@ import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructorStyles from './BurgerConstructor.module.css';
 import PropTypes from 'prop-types';
-import {ingredientType} from '../../utils/types'
+import { ingredientType } from '../../utils/types'
 
 
 const ConstructorItem = ({ el, index, moveListItem, deleteIngredient }) => {
-  
+
     const [{ isDragging }, dragRef] = useDrag({
         type: 'item',
         item: { index },
@@ -27,7 +27,7 @@ const ConstructorItem = ({ el, index, moveListItem, deleteIngredient }) => {
             const hoverActualY = monitor.getClientOffset().y - hoverBoundingRect.top
 
             if (dragIndex < hoverIndex && hoverActualY < hoverMiddleY) return
-     
+
             if (dragIndex > hoverIndex && hoverActualY > hoverMiddleY) return
 
             moveListItem(dragIndex, hoverIndex)
