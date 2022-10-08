@@ -4,7 +4,7 @@ import { BurgerIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ListIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import NavLink from './NavLink/NavLink';
-import headerStyles from './header.module.css'
+import headerStyles from './Header.module.css'
 
 function AppHeader() {
     const [current, setCurrent] = React.useState('one');

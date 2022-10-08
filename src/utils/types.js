@@ -21,6 +21,9 @@ export const navLinkPropTypes = PropTypes.shape({
     iconPrimary: PropTypes.elementType.isRequired,
     iconSecondary: PropTypes.elementType.isRequired,
     onClick: PropTypes.func.isRequired
-  });
-  
- 
+});
+
+export const stylePropTypes = PropTypes.shape({
+    boxShadow: PropTypes.string
+});
+

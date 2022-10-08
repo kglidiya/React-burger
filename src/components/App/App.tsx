@@ -1,115 +1,101 @@
-import { useEffect, useState, useReducer } from 'react';
+import { useEffect } from 'react';
 import React from 'react';
-import appStyles from './app.module.css';
+import appStyles from './App.module.css';
 import AppHeader from '../AppHeader/AppHeader';
 import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
 import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
 import Modal from '../Modal/Modal';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import OrderDetails from '../OrderDetails/OrderDetails';
-import { BurgerContext } from '../../services/BurgerContext';
-import {INGEDIENTS_API} from '../../utils/api'
+import { useDispatch, useSelector } from 'react-redux';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { getAllItems, setInitialConstructor } from '../../services/actions'
 
-const priceInitialState = { price: 0 }
-function reducer(state: any, action: any) {
-    switch (action.type) {
-      case "set":
-        return { price: action.payload };
-      case "reset":
-        return priceInitialState;
-      default:
-        throw new Error(`Wrong type of action: ${action.type}`);
-    }
-  } 
 
 function App() {
-  const [priceState, priceDispatcher] = useReducer(reducer, priceInitialState, undefined)
-
-  const [state, setState] = useState({
-    isLoading: false,
-    hasError: false,
-    ingredients: []
-  })
-  
-  //API
-  const getIndredientsData = async () => {
-    try {
-      setState({ ...state, isLoading: true });
-      await fetch(INGEDIENTS_API)
-        .then(res => {
-          if (res.ok) {
-            return res.json()
-          }
-          return Promise.reject(res.status);
-        })
-        .then(data => {
-          setState({
-            isLoading: false,
-            hasError: false,
-            ingredients: data.data
-          });
-        })
-    } catch (error) {
-      setState({
-        ...state,
-        hasError: true,
-      });
-    }
-  };
-
+  const dispatch = useDispatch();
   useEffect(() => {
-    getIndredientsData();
+    dispatch(getAllItems() as any)
   }, [])
 
-  const { isLoading, hasError, ingredients } = state;
+  const state = useSelector((state: any) => state);
+  const ingredients = state.ingredientsReducer.ingredients;
+  const isLoading = state.ingredientsReducer.ingredientsRequest;
+  const hasError = state.ingredientsReducer.ingredientsError;
+  const ingrediendsConstructor = state.constructorReducer.constructor;
 
-  //Set current ingredient in modalIngredient
-  const [currentIngredient, setCurrent] = React.useState(null);
+
+  useEffect(() => {
+    dispatch(setInitialConstructor(ingredients))
+  }, [ingredients])
 
   //Modals open/close
   const [currentModal, setCurrentModal] = React.useState('');
 
-  const [orderNumber, setOrderNumber] = useState(0);
+  //Highlighting active constructor border
+  const [style, setStyle] = React.useState<any | null>();
+
+  const [ingredientsConstructor, setIngredientsConstructor] = React.useState([ingrediendsConstructor]);
+
+  const handleDrop = (itemId: any) => {
+
+    setIngredientsConstructor([
+      ...ingredientsConstructor,
+      ingrediendsConstructor.splice(2, 0, ...ingredients.filter((element: any) => element._id === itemId._id && element.type !== 'bun'))
+    ])
+
+    ingredients.map((el: any) => {
+
+      if (el.type === 'bun' && el._id === itemId._id) {
+        setIngredientsConstructor([
+          ingrediendsConstructor.splice(0, 2, el, el)
+        ])
+      }
+    })
+  };
 
 
   return (
 
     <div className={appStyles.app}>
       <AppHeader />
-      <main className={appStyles.main}>
+      <DndProvider backend={HTML5Backend}>
+        <main className={appStyles.main}>
+          {isLoading && 'Загрузка...'}
+          {hasError && 'Произошла ошибка'}
+          {!isLoading &&
+            !hasError &&
+            <BurgerIngredients
+              openPopup={setCurrentModal}
+              setStyle={setStyle}
+            />
+          }
+          {isLoading && 'Загрузка...'}
+          {hasError && 'Произошла ошибка'}
+          {!isLoading &&
+            !hasError &&
+            <BurgerConstructor
+              openPopup={setCurrentModal}
+              onDropHandler={handleDrop}
+              style={style} />
+          }
+        </main>
+      </DndProvider>
 
-        {isLoading && 'Загрузка...'}
-        {hasError && 'Произошла ошибка'}
-        {!isLoading &&
-          !hasError &&
-          <BurgerIngredients openPopup={setCurrentModal} ingredientsData={ingredients} onClick={setCurrent}/>
-        }
-        {isLoading && 'Загрузка...'}
-        {hasError && 'Произошла ошибка'}
-        {!isLoading &&
-          !hasError &&
-          <BurgerContext.Provider value={ingredients}>
-          <BurgerConstructor openPopup={setCurrentModal} priceState={priceState} priceDispatcher={priceDispatcher}
-          setOrderNumber={setOrderNumber} />
-          </BurgerContext.Provider>
-        }
-      </main>
-
-      <Modal 
-      isOpen={currentModal === 'IngredientPopup'} 
-      onClose={setCurrentModal} 
-      height={'538px'}>
-        <IngredientDetails currentIngredient={currentIngredient} />
+      <Modal
+        isOpen={currentModal === 'IngredientPopup'}
+        onClose={setCurrentModal}
+        height={'538px'}>
+        <IngredientDetails />
       </Modal>
-      <Modal 
-      isOpen={currentModal === 'OrderPopup'} 
-      onClose={setCurrentModal} 
-      height={'718px'}>
-    
-        <OrderDetails orderNumber={orderNumber}/>
+      <Modal
+        isOpen={currentModal === 'OrderPopup'}
+        onClose={setCurrentModal}
+        height={'718px'}>
+        <OrderDetails />
       </Modal>
     </div>
-
   );
 }
 

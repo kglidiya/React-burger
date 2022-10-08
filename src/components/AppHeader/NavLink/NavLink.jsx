@@ -1,4 +1,4 @@
-import linkStyles from "./link.module.css";
+import linkStyles from "./Link.module.css";
 import PropTypes from 'prop-types';
 import {navLinkPropTypes} from '../../../utils/types'
 

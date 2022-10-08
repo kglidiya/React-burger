@@ -1,14 +1,13 @@
-import orderDetailsStyles from './order.module.css';
+import orderDetailsStyles from './Order.module.css';
 import icon from '../../images/done.svg';
-import PropTypes from 'prop-types';
+import {useSelector } from 'react-redux';
 
 
-OrderDetails.propTypes = {
-    orderNumber: PropTypes.number.isRequired,
-}
+function OrderDetails() {
 
-function OrderDetails({orderNumber}) {
-        
+    const orderNumber = useSelector(state => state.orderReducer.orderNumber);
+
+    
     return (
   
             <div className={orderDetailsStyles.container}>

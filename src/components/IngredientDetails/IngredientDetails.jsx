@@ -1,12 +1,12 @@
-import ingredientDetails from './ingredientDetails.module.css';
-import { ingredientType } from '../../utils/types';
+import ingredientDetails from './IngredientDetails.module.css';
+import {  useSelector } from 'react-redux';
 
 
-IngredientDetails.propTypes = {
-    currentIngredient: ingredientType
-}
 
-function IngredientDetails({ currentIngredient }) {
+function IngredientDetails() {
+
+    const currentIngredient = useSelector((state) => state.currentIngredientReducer.currentIngredient);
+   
 
     return (
         <>

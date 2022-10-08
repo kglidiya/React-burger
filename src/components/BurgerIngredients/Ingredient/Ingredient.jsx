@@ -1,41 +1,76 @@
-import React from "react";
-import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import ingredientsStyles from './ingredients.module.css';
-import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
-import {ingredientType} from '../../../utils/types';
+import React from 'react';
+import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import ingredientsStyles from "./Ingredients.module.css";
+import { Counter } from "@ya.praktikum/react-developer-burger-ui-components";
+import PropTypes from "prop-types";
+import { ingredientType } from "../../../utils/types";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentIngredient } from "../../../services/actions";
 
+import { useDrag } from "react-dnd";
+
+const Ingredient = ({ openPopup, ingredient, setStyle }) => {
+
+    const ingrediendsConstructor = useSelector(
+        (state) => state.constructorReducer.constructor
+    );
+
+    const dispatch = useDispatch();
+
+    const { _id, ...content } = ingredient;
+
+    const [{ isDragging }, dragRef] = useDrag({
+        type: "ingredient",
+        item: { _id },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    });
+
+    let count = 0;
+
+    React.useEffect(() => {
+        if (isDragging) {
+            setStyle({
+                boxShadow: `inset 0 4px 20px rgba(51, 51, 255, 0.5),
+        inset 0 0 8px rgba(51, 51, 255, 0.25),
+        inset 0 0 8px rgba(51, 51, 255, 0.25)`})
+        } else setStyle()
+    }, [isDragging])
+
+    return (
+        <article ref={dragRef}
+            className={ingredientsStyles.container}
+            onClick={() => {
+                openPopup("IngredientPopup");
+                dispatch(setCurrentIngredient(ingredient));
+            }}
+        >
+            {ingrediendsConstructor.map((el, index) => {
+                if (el._id === ingredient._id) {
+                    count++;
+                    return <Counter count={count} size="default" key={index} />;
+                }
+            })}
+
+            <img
+                src={content.image}
+                alt={content.image}
+                className={ingredientsStyles.image}
+            />
+            <div className={ingredientsStyles.price}>
+                <p className="text text_type_digits-default">{content.price}</p>
+                <CurrencyIcon type="primary" />
+            </div>
+            <p className="text text_type_main-small mt-3">{content.name}</p>
+        </article>
+    );
+};
 
 Ingredient.propTypes = {
     openPopup: PropTypes.func.isRequired,
     ingredient: ingredientType.isRequired,
-    getCurrentIngredient: PropTypes.func.isRequired,
+    setStyle: PropTypes.func.isRequired
 };
-
-function Ingredient ({ openPopup, ingredient, getCurrentIngredient })  {
-
-    const [isChosen, setIsChosen] = React.useState(false);
-   
-    const choose = () => {
-        setIsChosen(true)
-        getCurrentIngredient(ingredient)
-    }
-
-    return (
-        <article className={ingredientsStyles.container} onClick={() => {
-            openPopup('IngredientPopup');
-            choose();
-        }}>
-            {isChosen && <Counter count={1} size="default" />}
-            <img src={ingredient.image} alt={ingredient.image} className={ingredientsStyles.image} />
-            <div className={ingredientsStyles.price} >
-                <p className="text text_type_digits-default">{ingredient.price}</p>
-                <CurrencyIcon type="primary" />
-            </div>
-            <p className="text text_type_main-small mt-3" >{ingredient.name}</p>
-        </article>
-
-    )
-}
 
 export default Ingredient;
