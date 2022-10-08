@@ -105,9 +105,6 @@ function BurgerConstructor({ openPopup, onDropHandler, style }) {
                         <ul className={constructorStyles.scroll} >
                             {ingrediendsConstructor.map((item, i) => {
                                 if (item.type === 'main' || item.type === 'sauce') {
-                                    //не придумала, как решить проблему дефективного элемента иным способом
-                                    // это эл из библиотеки Яндекса и доступа к его стилям у меня нет
-                                    // вообще наставкик говорил ранее оставить как есть
                                     if(item.name === 'Соус Spicy-X') {
                                         item.name = item.name + ' межорбитальный'
                                     }
