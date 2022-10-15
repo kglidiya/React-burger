@@ -1,2 +1,2 @@
 # Реализация приложения с с использованием библиотеки React.
-https://yandex-studens.github.io/react-intensive
+https://kglidiya.github.io/React-burger
