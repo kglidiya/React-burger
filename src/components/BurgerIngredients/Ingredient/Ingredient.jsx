@@ -5,11 +5,14 @@ import { Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 import { ingredientType } from "../../../utils/types";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentIngredient } from "../../../services/actions";
-
+import { setCurrentIngredient } from "../../../services/actions/currentIngredientActions";
+import {  Link, useLocation } from 'react-router-dom';
 import { useDrag } from "react-dnd";
 
+
+
 const Ingredient = ({ openPopup, ingredient, setStyle }) => {
+    const location = useLocation();
 
     const ingrediendsConstructor = useSelector(
         (state) => state.constructorReducer.constructor
@@ -39,7 +42,13 @@ const Ingredient = ({ openPopup, ingredient, setStyle }) => {
     }, [isDragging])
 
     return (
-        <article ref={dragRef}
+
+        <Link
+            to={{
+                pathname: `/ingredients/${_id}`,
+                state: { background: location }
+            }}
+            ref={dragRef}
             className={ingredientsStyles.container}
             onClick={() => {
                 openPopup("IngredientPopup");
@@ -63,7 +72,8 @@ const Ingredient = ({ openPopup, ingredient, setStyle }) => {
                 <CurrencyIcon type="primary" />
             </div>
             <p className="text text_type_main-small mt-3">{content.name}</p>
-        </article>
+        </Link>
+
     );
 };
 

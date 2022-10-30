@@ -13,18 +13,28 @@
   margin-left: 0;
 }
 
-.container:nth-of-type(2) {
-  padding-right: 112px;
-}
-
-.container:last-of-type {
-  padding-left: 288px;
-}
-
 .title {
   color: #8585ad;
 }
 
 .title_active {
+  color: #f2f2f3;
+}
+
+.link {
+  text-decoration: none;
+  margin-left: 20px;
+  color: #8585ad;
+}
+
+.link:nth-of-type(2) {
+  padding-right: 112px;
+}
+
+.link:last-of-type {
+  padding-left: 288px;
+}
+
+.link_active {
   color: #f2f2f3;
 }

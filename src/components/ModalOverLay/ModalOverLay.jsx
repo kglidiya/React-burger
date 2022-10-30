@@ -1,7 +1,8 @@
 import overlayStyles from './Overlay.module.css';
 import PropTypes from 'prop-types';
-import {deleteCurrentIngredient} from '../../services/actions'
+import {deleteCurrentIngredient} from '../../services/actions/currentIngredientActions'
 import { useDispatch, } from 'react-redux';
+
 
 ModalOverLay.propTypes = {
     children: PropTypes.element.isRequired,
@@ -10,6 +11,7 @@ ModalOverLay.propTypes = {
 };
 
 function ModalOverLay({ children, closePopup, animation }) {
+ 
     const dispatch = useDispatch();
     
 

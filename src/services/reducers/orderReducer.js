@@ -3,7 +3,7 @@ import {
   GET_ORDER_SUCCESS,
   GET_ORDER_ERROR,
   SET_ORDER_DETAILS
-} from './actions'
+} from '../actions/orderActions'
 
 
 const initialState = {

@@ -5,7 +5,9 @@ import ReactDOM from 'react-dom';
 import ModalOverLay from "../ModalOverLay/ModalOverLay";
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import {deleteCurrentIngredient} from '../../services/actions'
+import {deleteCurrentIngredient} from '../../services/actions/currentIngredientActions'
+import { useHistory } from 'react-router-dom';
+
 
 Modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
@@ -17,11 +19,12 @@ Modal.propTypes = {
 const modalRoot = document.getElementById("react-modals");
 
 function Modal({ isOpen, children, onClose, height }) {
+  const history = useHistory()
+
   const dispatch = useDispatch();
 
-
   function closePopup() {
-
+    history.replace({pathname: '/'})
     setAnimation('fadeOut')
     setTimeout(() => {
       setAnimation('fadeIn')
@@ -57,12 +60,14 @@ function Modal({ isOpen, children, onClose, height }) {
       isOpen={isOpen}
       animation={animation}
     >
+      
       <div className={modal.container} style={{ height: height }}>
         {children}
         <button onClick={closePopup}
           className={modal.closeBtn}>
           <CloseIcon type="primary" /></button>
       </div>
+      
     </ModalOverLay>
     , modalRoot
   );

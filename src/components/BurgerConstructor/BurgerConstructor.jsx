@@ -3,17 +3,27 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import {stylePropTypes} from '../../utils/types'
+import { stylePropTypes } from '../../utils/types';
+import { isTokenExpired } from '../../utils/token'
+import { getCookie } from "../../utils/cookie";
 import React from 'react';
 import { useDrop, } from "react-dnd";
 import { useDispatch, useSelector } from 'react-redux';
-import ConstructorItem from './ConstructorItem'
+import ConstructorItem from './ConstructorItem';
 import {
-     deleteItem,
+    deleteItem,
+    swapItems,
+} from '../../services/actions/constructorActions';
+import {
     setOrderDetails,
     getOrderNumber,
-    swapItems
-} from '../../services/actions';
+    GET_ORDER_REQUEST,
+    GET_ORDER_ERROR
+} from '../../services/actions/orderActions';
+import {
+    getNewToken,
+} from '../../services/actions/usersActions';
+import { useHistory } from 'react-router-dom';
 
 BurgerConstructor.propTypes = {
     openPopup: PropTypes.func.isRequired,
@@ -24,22 +34,26 @@ BurgerConstructor.propTypes = {
 
 function BurgerConstructor({ openPopup, onDropHandler, style }) {
     const dispatch = useDispatch();
+    const history = useHistory()
     const ingrediendsConstructor = useSelector((state) => state.constructorReducer.constructor);
+    const isLoading = useSelector(state => state.orderReducer.orderRequest)
+    const auth = useSelector(state => state.userReducer.isAuthenticated)
 
-    const listRef = React.useRef([]);
-    let priceTotal = 0;
+    const listRef = React.useRef([])
+    let priceTotal = 0
     const ingredientsIds = []
+    const token = getCookie('token')
 
     const [price, setPrice] = React.useState(0);
 
-    const [{ didDrop}, dropTarget] = useDrop({
+    const [{ didDrop }, dropTarget] = useDrop({
         accept: "ingredient",
         drop(itemId) {
             onDropHandler(itemId);
         },
         collect: monitor => ({
             didDrop: monitor.didDrop(),
-          
+
         })
     });
 
@@ -55,7 +69,8 @@ function BurgerConstructor({ openPopup, onDropHandler, style }) {
     function getIngredientsId() {
         ingrediendsConstructor.map(el => {
             ingredientsIds.push(el._id)
-        })     
+
+        })
     }
 
     React.useEffect(() => {
@@ -64,17 +79,33 @@ function BurgerConstructor({ openPopup, onDropHandler, style }) {
             setPrice(priceTotal)
         })
         getIngredientsId()
-      dispatch(setOrderDetails(ingredientsIds))
+        dispatch(setOrderDetails(ingredientsIds))
+
     }, [didDrop, ingrediendsConstructor.length])
 
 
-    const movePetListItem = React.useCallback(
+    const moveListItem = React.useCallback(
         (dragIndex, hoverIndex) => {
             dispatch(swapItems(dragIndex, hoverIndex))
         },
         [ingrediendsConstructor]
-
     )
+
+    function redirect() {
+        history.replace({ pathname: '/login', state: '/' })
+    }
+
+    function checkToken() {
+        if (token === undefined) {
+            dispatch(getNewToken())
+        }
+        if (token !== undefined) {
+            const isExpired = isTokenExpired(token)
+            if (isExpired) {
+                dispatch(getNewToken())
+            }
+        }
+    }
 
     return (
         <aside className={constructorStyles.sidebar}>
@@ -105,7 +136,7 @@ function BurgerConstructor({ openPopup, onDropHandler, style }) {
                         <ul className={constructorStyles.scroll} >
                             {ingrediendsConstructor.map((item, i) => {
                                 if (item.type === 'main' || item.type === 'sauce') {
-                                    if(item.name === 'Соус Spicy-X') {
+                                    if (item.name === 'Соус Spicy-X') {
                                         item.name = item.name + ' межорбитальный'
                                     }
                                     return (
@@ -116,7 +147,7 @@ function BurgerConstructor({ openPopup, onDropHandler, style }) {
                                                 deleteIngredient={deleteIngredient}
                                                 el={item}
                                                 index={i}
-                                                moveListItem={movePetListItem}
+                                                moveListItem={moveListItem}
                                             />
                                         </li>
                                     )
@@ -154,9 +185,23 @@ function BurgerConstructor({ openPopup, onDropHandler, style }) {
                 </div>
                 <Button type="primary" size="medium" onClick={() => {
                     getIngredientsId()
-                    dispatch(getOrderNumber(ingredientsIds, openPopup))
+                    if (!auth) {
+                        redirect()
+                        dispatch({
+                            type: GET_ORDER_ERROR
+                        })
+                    } else {
+                        checkToken()
+                        setTimeout(() => {
+                            dispatch({
+                                type: GET_ORDER_REQUEST
+                            })
+                            dispatch(getOrderNumber(ingredientsIds, openPopup))
+                        }, 0)
+                    }
                 }}>
-                    Оформить заказ
+                    {isLoading && 'Ожидайте номер заказа...'}
+                    {!isLoading && 'Оформить заказ'}
                 </Button>
             </div>
 

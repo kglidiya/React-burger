@@ -1,7 +1,7 @@
 import {
   SET_CURRENT_ITEM,
   DELETE_CURRENT_ITEM,
-} from './actions'
+} from '../actions/currentIngredientActions'
 
 
 
