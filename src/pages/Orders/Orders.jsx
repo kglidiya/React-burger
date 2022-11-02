@@ -1,5 +1,5 @@
 import PageStyles from './Orders.module.css';
-import image from '../../../images/page404.png'
+import image from '../../images/page404.png'
 
 
 

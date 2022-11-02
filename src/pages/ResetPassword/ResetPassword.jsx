@@ -3,13 +3,10 @@ import ResetPasswordStyles from './ResetPassword.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import {  changePassword } from '../../../services/actions/usersActions'
-import { setInputWidth } from '../../../utils/inputs'
+import { changePassword } from '../../services/actions/usersActions'
+
 
 function ResetPassword() {
-    React.useEffect(() => {
-        setInputWidth()
-    }, [])
 
     const dispatch = useDispatch()
     const history = useHistory();
@@ -25,7 +22,15 @@ function ResetPassword() {
     const onSubmit = e => {
         e.preventDefault();
         dispatch(changePassword(form.newPassword, form.code))
-        history.replace({pathname: '/login'})
+        history.replace({ pathname: '/login' })
+    }
+
+    if (history.location.state?.from !== 'forgot-password') {
+        return (
+            <Redirect
+                to='/forgot-password'
+            />
+        );
     }
 
     if (auth) {
@@ -35,6 +40,7 @@ function ResetPassword() {
             />
         );
     }
+
 
     return (
 
@@ -61,7 +67,7 @@ function ResetPassword() {
                             />
                         </div>
                     </div>
-                    <Button type="primary" size="medium" onClick={onSubmit}>Сохранить</Button>
+                    <Button type="primary" size="medium">Сохранить</Button>
                 </form>
 
                 <div className={ResetPasswordStyles.text}>

@@ -8,11 +8,12 @@ function Ingredients() {
     const ingredients = state.ingredientsReducer.ingredients;
     const { id } = useParams()
 
+
     return (
         <main className={ingredientDetails.main}>
             {ingredients.map((el) => {
                 if (el._id === id) {
-                    return <div className={ingredientDetails.container} key={el._id} >
+                    return (<div className={ingredientDetails.container} key={el._id} >
                         <h3 className={`${ingredientDetails.header} text text_type_main-large`}>Детали ингредиента</h3>
                         <img src={el.image} alt={el.image} className={ingredientDetails.image} />
                         <h4 className={`${ingredientDetails.title} text text_type_main-medium`} >{el.name}</h4>
@@ -34,7 +35,7 @@ function Ingredients() {
                                 <p className="text text_type_digits-default text_color_inactive pt-2">{el.carbohydrates}</p>
                             </li>
                         </ul>
-                    </div>
+                    </div>)
                 }
             })}
 

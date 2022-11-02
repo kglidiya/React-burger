@@ -1,15 +1,14 @@
 export const SET_INITIAL_CONSTRUCTOR = 'SET_INITIAL_CONSTRUCTOR';
 export const DELETE_CONSTRUCTOR_ITEM = 'DELETE_CONSTRUCTOR_ITEM';
 export const SWAP_ITEMS = 'SWAP_ITEMS';
+export const SET_BUN_CHOSEN = 'SET_BUN_CHOSEN';
 
 
-export function setInitialConstructor(items) {
+export function setInitialConstructor() {
     return {
         type: SET_INITIAL_CONSTRUCTOR,
-        payload: { items },
     };
 }
-
 
 export function deleteItem(index) {
     return {
@@ -26,4 +25,9 @@ export function swapItems(index1, index2) {
     };
 }
 
-
+export function isBunChosen(isBun) {
+    return {
+        type: SET_BUN_CHOSEN,
+        payload: isBun,
+    };
+}

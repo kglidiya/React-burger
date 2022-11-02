@@ -3,10 +3,9 @@ import ProfileStyles from './Profile.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { editUserDetails, getUserDetails, signOut, getNewToken } from '../../../services/actions/usersActions'
-import { setInputWidth } from '../../../utils/inputs'
-import { isTokenExpired } from '../../../utils/token'
-import { getCookie } from "../../../utils/cookie";
+import { editUserDetails, getUserDetails, signOut, getNewToken } from '../../services/actions/usersActions'
+import { isTokenExpired } from '../../utils/token'
+import { getCookie } from "../../utils/cookie";
 
 
 function Profile() {
@@ -29,7 +28,6 @@ function Profile() {
     }
 
     React.useEffect(() => {
-        setInputWidth()
         checkToken()
         setTimeout(() => dispatch(getUserDetails(password)), 0)
     }, [token])
@@ -105,7 +103,7 @@ function Profile() {
 
             <div className={ProfileStyles.container}>
 
-                <form onSubmit={onSubmit}>
+                <form onSubmit={onSubmit} className={ProfileStyles.form}>
                     <div className='mb-5 pb-1'>
 
                         <Input
@@ -147,7 +145,6 @@ function Profile() {
                         <Button
                             type="primary"
                             size="medium"
-                            onClick={onSubmit}
                         >Сохранить</Button>
                         <Button
                             type="primary"

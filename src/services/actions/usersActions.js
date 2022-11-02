@@ -9,6 +9,7 @@ import {
   sendNewPassword
 } from "../../utils/api";
 import { setCookie } from '../../utils/cookie.js'
+import { setInitialConstructor } from '../../services/actions/constructorActions'
 
 export const REGISTER_USER = 'REGISTER_USER';
 export const RESET_PASSWORD = 'RESET_PASSWORD';
@@ -53,20 +54,13 @@ export function resetUser(userName, email, password, isAuthenticated) {
   };
 }
 
-
-export function sendResetEmail(userEmail) {
+export function sendResetEmail(userEmail, redirect) {
   return function (dispatch) {
     sendEmail(userEmail)
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(res.status);
-      })
       .then(data => {
-        //console.log(data)
+       // console.log(data)
         if (data.success === true) {
-          window.location.assign('http://localhost:3000/reset-password');
+          redirect()
         }
       })
       .catch(err => {
@@ -78,14 +72,8 @@ export function sendResetEmail(userEmail) {
 export function changePassword(UserPassword, code) {
   return function (dispatch) {
     sendNewPassword(UserPassword, code)
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(res.status);
-      })
       // .then(data => {
-      //   console.log(data)     
+      //   console.log(data)
       // })
       .catch(err => {
         console.log(err)
@@ -96,15 +84,8 @@ export function changePassword(UserPassword, code) {
 export function registerNewUser(name, email, password) {
   return function (dispatch) {
     sendUserDetails(name, email, password)
-      .then(res => {
-        console.log(res)
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(res.status);
-      })
       .then(data => {
-        // console.log(data)
+       // console.log(data)
         let authToken;
         let refreshToken;
         if (data.success === true) {
@@ -125,14 +106,8 @@ export function registerNewUser(name, email, password) {
 export function signIn(userEmail, userPassword) {
   return function (dispatch) {
     logIn(userEmail, userPassword)
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(res.status);
-      })
       .then(data => {
-        //console.log(data)
+       // console.log(data)
         let authToken;
         let refreshToken;
         if (data.success === true) {
@@ -153,17 +128,12 @@ export function signIn(userEmail, userPassword) {
 export function signOut() {
   return function (dispatch) {
     logOut()
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(res.status);
-      })
       .then(data => {
-        //console.log(data)
+       // console.log(data)
         if (data.success === true) {
           setCookie('token', '');
           dispatch(resetUser())
+          dispatch(setInitialConstructor())
         }
       })
       .catch(err => {
@@ -176,14 +146,8 @@ export function signOut() {
 export function getUserDetails(password) {
   return function (dispatch) {
     getUser()
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(res.status);
-      })
       .then(data => {
-        //console.log(data)
+       // console.log(data)
         if (data.success === true) {
           dispatch(setUser(data.user.name, data.user.email, password))
           dispatch(authenticate())
@@ -198,14 +162,8 @@ export function getUserDetails(password) {
 export function getNewToken() {
   return function (dispatch) {
     refreshToken()
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(res.status);
-      })
       .then(data => {
-        // console.log(data)
+       // console.log(data)
         let authToken;
         let refreshToken;
         if (data.success === true) {
@@ -225,14 +183,8 @@ export function getNewToken() {
 export function editUserDetails(userEmail, userPassword, userName) {
   return function (dispatch) {
     editUser(userEmail, userPassword, userName)
-      .then(res => {
-        if (res.ok) {
-          return res.json()
-        }
-        return Promise.reject(res.status);
-      })
       .then(data => {
-        // console.log(data)
+       //console.log(data)
         if (data.success === true) {
           dispatch(setUser(data.user.name, data.user.email, userPassword))
         }

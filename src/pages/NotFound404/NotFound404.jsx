@@ -1,5 +1,5 @@
 import PageStyles from './NotFound404.module.css';
-import image from '../../../images/notFound.png'
+import image from '../../images/notFound.png'
 
 
 function NotFound404() {

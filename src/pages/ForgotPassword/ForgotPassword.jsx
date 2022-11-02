@@ -1,16 +1,13 @@
-import React from 'react';
 import ForgotPasswordStyes from './ForgotPassword.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { resetPassword, sendResetEmail } from '../../../services/actions/usersActions';
-import { setInputWidth } from '../../../utils/inputs';
+import { resetPassword, sendResetEmail } from '../../services/actions/usersActions';
+
 
 function ForgotPassword() {
 
-  React.useEffect(() => {
-    setInputWidth()
-  }, [])
+ 
   const re = /^[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$/i
   const dispatch = useDispatch()
   const userEmail = useSelector(state => state.userReducer.email)
@@ -20,12 +17,16 @@ function ForgotPassword() {
     dispatch(resetPassword(e.target.value))
   }
 
+  function redirect() {
+    history.push(`/reset-password`, { from: 'forgot-password' } );
+  }
+
   const onSubmit = e => {
     e.preventDefault();
     if (!re.test(userEmail)) {
       return
     }
-    dispatch(sendResetEmail(userEmail))
+    dispatch(sendResetEmail(userEmail, redirect))
 
   }
 
@@ -54,8 +55,7 @@ function ForgotPassword() {
 
           <Button
             type="primary"
-            size="medium"
-            onClick={onSubmit}>
+            size="medium">
             Восстановить
           </Button>
         </form>

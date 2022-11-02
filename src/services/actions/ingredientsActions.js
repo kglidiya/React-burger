@@ -1,4 +1,4 @@
-import { INGEDIENTS_API } from "../../utils/api";
+import { getItems} from "../../utils/api";
 export const INGREDIENTS_ORDER_REQUEST = 'INGREDIENTS_ORDER_REQUEST';
 export const INGREDIENTS_ORDER_SUCCESS = 'INGREDIENTS_ORDER_SUCCESS';
 export const INGREDIENTS_ORDER_ERROR = 'INGREDIENTS_ORDER_ERROR';
@@ -11,13 +11,7 @@ export function getAllItems() {
         dispatch({
           type: INGREDIENTS_ORDER_REQUEST
         })
-        await fetch(INGEDIENTS_API)
-          .then((res) => {
-            if (res.ok) {
-              return res.json();
-            }
-            return Promise.reject(res.status);
-          })
+        await getItems()
           .then((data) => {
             dispatch({
               type: INGREDIENTS_ORDER_SUCCESS,

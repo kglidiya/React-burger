@@ -25,6 +25,13 @@
   flex-direction: column;
 }
 
+.form div div {
+  width: 480px;
+}
+
+.form div div div {
+  width: unset;
+}
 .link {
   text-decoration: none;
   color: #4c4cff;

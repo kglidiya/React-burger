@@ -3,13 +3,11 @@ import RegisterStyles from './Register.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import { Input, EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import {  registerNewUser } from '../../../services/actions/usersActions'
-import { setInputWidth } from '../../../utils/inputs'
+import { registerNewUser } from '../../services/actions/usersActions'
+
 
 function Register() {
-    React.useEffect(() => {
-        setInputWidth()
-    }, [])
+
     const auth = useSelector(state => state.userReducer.isAuthenticated)
     const dispatch = useDispatch()
     const history = useHistory();
@@ -59,7 +57,7 @@ function Register() {
                             onChange={onChange}
                             value={form.password} />
                     </div>
-                    <Button type="primary" size="medium" onClick={onSubmit}>Зарегистрироваться</Button>
+                    <Button type="primary" size="medium">Зарегистрироваться</Button>
                 </form>
 
                 <div className={RegisterStyles.text}>

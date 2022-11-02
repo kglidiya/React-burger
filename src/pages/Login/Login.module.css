@@ -12,17 +12,30 @@
   width: 480px;
 }
 
+.form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  
+  width: 480px;
+}
+
+
+
+.form div div {
+   width: 480px;
+}
+
+
 .input {
-  width: 100%;
+
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
 }
 
-.form {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+.input div div {
+  width: unset;
 }
 
 .link {
@@ -31,8 +44,12 @@
 }
 
 .text {
-  margin-top: 80px;
+  margin-top: 82px;
   display: flex;
   flex-direction: row;
   gap: 8px;
+}
+
+.text:last-of-type {
+  margin-top: 16px;
 }

@@ -11,9 +11,29 @@ export const LOGOUT_API = `${AUTH_API}/logout`;
 export const TOKEN_API = `${AUTH_API}/token`;
 export const USER_API = `${AUTH_API}/user`;
 
+function checkResponse(res) {
+  if (res.ok) {
+    return res.json()
+  }
+  return Promise.reject(res.status);
+}
+
+function request(url, options) {
+  return fetch(url, options).then(checkResponse)
+}
+
+
+export function getItems() {
+  return request(INGEDIENTS_API, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}
 
 export function sendOrder(ingredientsId) {
-  return fetch(ORDERS_API, {
+  return request(ORDERS_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -24,7 +44,7 @@ export function sendOrder(ingredientsId) {
 }
 
 export function sendEmail(userEmail) {
-  return fetch(PASSWORD_API, {
+  return request(PASSWORD_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -34,7 +54,7 @@ export function sendEmail(userEmail) {
 }
 
 export function sendNewPassword(UserPassword, code) {
-  return fetch(PASSWORD_RESET_API, {
+  return request(PASSWORD_RESET_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -47,7 +67,7 @@ export function sendNewPassword(UserPassword, code) {
 }
 
 export function sendUserDetails(userEmail, userPassword, userName) {
-  return fetch(REGISTER_API, {
+  return request(REGISTER_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -62,7 +82,7 @@ export function sendUserDetails(userEmail, userPassword, userName) {
 
 
 export function logIn(userEmail, userPassword) {
-  return fetch(LOGIN_API, {
+  return request(LOGIN_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -74,24 +94,20 @@ export function logIn(userEmail, userPassword) {
   })
 }
 
+
 export function getUser() {
-  return fetch(USER_API, {
+  return request(USER_API, {
     method: 'GET',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + getCookie('token')
     },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer'
   })
 }
 
 
 export function editUser(userEmail, userPassword, userName) {
-  return fetch(USER_API, {
+  return request(USER_API, {
     method: 'PATCH',
     mode: 'cors',
     cache: 'no-cache',
@@ -110,7 +126,7 @@ export function editUser(userEmail, userPassword, userName) {
 
 
 export function refreshToken() {
-  return fetch(TOKEN_API, {
+  return request(TOKEN_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -123,7 +139,7 @@ export function refreshToken() {
 
 
 export function logOut() {
-  return fetch(LOGOUT_API, {
+  return request(LOGOUT_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -135,7 +151,3 @@ export function logOut() {
 
 }
 
-  // console.log('Bearer ' + getCookie('token'))
-//console.log(getCookie('token'))
-//console.log(localStorage.token)
-//{"success":false,"message":"jwt expired"}
