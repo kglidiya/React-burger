@@ -58,7 +58,6 @@ export function sendResetEmail(userEmail, redirect) {
   return function (dispatch) {
     sendEmail(userEmail)
       .then(data => {
-       // console.log(data)
         if (data.success === true) {
           redirect()
         }
@@ -72,9 +71,6 @@ export function sendResetEmail(userEmail, redirect) {
 export function changePassword(UserPassword, code) {
   return function (dispatch) {
     sendNewPassword(UserPassword, code)
-      // .then(data => {
-      //   console.log(data)
-      // })
       .catch(err => {
         console.log(err)
       })
@@ -85,7 +81,6 @@ export function registerNewUser(name, email, password) {
   return function (dispatch) {
     sendUserDetails(name, email, password)
       .then(data => {
-       // console.log(data)
         let authToken;
         let refreshToken;
         if (data.success === true) {
@@ -93,8 +88,8 @@ export function registerNewUser(name, email, password) {
           dispatch(setUser(name, email, password))
           authToken = data.accessToken.split('Bearer ')[1]
           refreshToken = data.refreshToken
-          setCookie('token', authToken);
           localStorage.setItem('token', refreshToken)
+           setCookie('token', authToken);
         }
       })
       .catch(err => {
@@ -107,7 +102,6 @@ export function signIn(userEmail, userPassword) {
   return function (dispatch) {
     logIn(userEmail, userPassword)
       .then(data => {
-       // console.log(data)
         let authToken;
         let refreshToken;
         if (data.success === true) {
@@ -129,9 +123,7 @@ export function signOut() {
   return function (dispatch) {
     logOut()
       .then(data => {
-       // console.log(data)
         if (data.success === true) {
-          setCookie('token', '');
           dispatch(resetUser())
           dispatch(setInitialConstructor())
         }
@@ -146,8 +138,7 @@ export function signOut() {
 export function getUserDetails(password) {
   return function (dispatch) {
     getUser()
-      .then(data => {
-       // console.log(data)
+        .then(data => {
         if (data.success === true) {
           dispatch(setUser(data.user.name, data.user.email, password))
           dispatch(authenticate())
@@ -163,15 +154,15 @@ export function getNewToken() {
   return function (dispatch) {
     refreshToken()
       .then(data => {
-       // console.log(data)
+        console.log(data)
         let authToken;
         let refreshToken;
         if (data.success === true) {
           dispatch(authenticate())
           authToken = data.accessToken.split('Bearer ')[1]
           refreshToken = data.refreshToken
-          setCookie('token', authToken);
           localStorage.setItem('token', refreshToken)
+          setCookie('token', authToken);
         }
       })
       .catch(err => {
@@ -184,7 +175,6 @@ export function editUserDetails(userEmail, userPassword, userName) {
   return function (dispatch) {
     editUser(userEmail, userPassword, userName)
       .then(data => {
-       //console.log(data)
         if (data.success === true) {
           dispatch(setUser(data.user.name, data.user.email, userPassword))
         }

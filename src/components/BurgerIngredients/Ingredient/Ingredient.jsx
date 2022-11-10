@@ -6,13 +6,13 @@ import PropTypes from "prop-types";
 import { ingredientType } from "../../../utils/types";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngredient } from "../../../services/actions/currentIngredientActions";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useDrag } from "react-dnd";
 
 
 
 const Ingredient = ({ openPopup, ingredient, setStyle }) => {
-
+    let location = useLocation();
     const ingredientsConstructor = useSelector((state) => state.constructorReducer.constructor);
     const dispatch = useDispatch();
     const { _id, ...content } = ingredient;
@@ -38,7 +38,8 @@ const Ingredient = ({ openPopup, ingredient, setStyle }) => {
 
     return (
         <Link
-            to={{ pathname: `/ingredients/${_id}` }}
+            to={{ pathname: `/ingredients/${_id}` ,
+            state: { background: location}}}
             ref={dragRef}
             className={ingredientsStyles.container}
             onClick={() => {

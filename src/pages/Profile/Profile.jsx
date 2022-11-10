@@ -1,36 +1,36 @@
 import React from 'react';
 import ProfileStyles from './Profile.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import NavAside from '../../components/NavAside/NavAside';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { editUserDetails, getUserDetails, signOut, getNewToken } from '../../services/actions/usersActions'
+import { editUserDetails, getUserDetails, getNewToken } from '../../services/actions/usersActions'
 import { isTokenExpired } from '../../utils/token'
-import { getCookie } from "../../utils/cookie";
+import { getCookie} from "../../utils/cookie";
 
 
 function Profile() {
     const user = useSelector(state => state.userReducer)
     const dispatch = useDispatch()
     const password = user.password
-    const auth = useSelector(state => state.userReducer.isAuthenticated)
-    const token = getCookie('token')
+
 
     function checkToken() {
+        let token = getCookie('token')
         if (token === undefined) {
-            dispatch(getNewToken())
+           dispatch(getNewToken())
         }
         if (token !== undefined) {
             const isExpired = isTokenExpired(token)
-            if (isExpired) {
+            if (isExpired) {   
                 dispatch(getNewToken())
             }
         }
     }
-
+  
     React.useEffect(() => {
         checkToken()
         setTimeout(() => dispatch(getUserDetails(password)), 0)
-    }, [token])
+    }, [])
 
     const [form, setValue] = React.useState({ name: user.userName, email: user.email, password: user.password });
 
@@ -53,10 +53,6 @@ function Profile() {
         setIsChanged(false)
     }
 
-    const logOut = () => {
-        dispatch(signOut())
-        localStorage.removeItem("persist:root")
-    }
 
     const inputRef = React.useRef();
     const onIconClick = () => {
@@ -67,40 +63,8 @@ function Profile() {
     return (
 
         <main className={ProfileStyles.main}>
-            <ul className={ProfileStyles.list}>
-                <li className={ProfileStyles.list_item}>
-                    <NavLink
-                        to={{ pathname: `/profile` }}
-                        className={`${ProfileStyles.link} text text_type_main-medium`}
-                        activeClassName={ProfileStyles.link_active}
-                        exact={true}
-                    >Профиль
-                    </NavLink>
-                </li>
-                <li className={ProfileStyles.list_item}>
-                    <NavLink
-                        className={`${ProfileStyles.link} text text_type_main-medium text_color_inactive`}
-                        to={{ pathname: `/profile/orders/:id` }}
-                        exact={true}
-                        activeClassName={ProfileStyles.link_active}
-                    >
-                        История заказов
-                    </NavLink>
-                </li>
-                <li className={ProfileStyles.list_item}>
-                    <NavLink
-                        className={`${ProfileStyles.link} text text_type_main-medium text_color_inactive`}
-                        to={!auth ? { pathname: `/login` } : { pathname: `` }}
-                        exact={true}
-                        activeClassName={ProfileStyles.link_active}
-                        onClick={logOut}
-                    >
-                        Выход
-                    </NavLink>
-                </li>
-                <li className={`${ProfileStyles.text} text text_type_main-default text_color_inactive`}>В этом разделе вы можете изменить свои персональные данные</li>
-            </ul>
-
+            <NavAside text={'В этом разделе вы можете изменить свои персональные данные'}/>
+         
             <div className={ProfileStyles.container}>
 
                 <form onSubmit={onSubmit} className={ProfileStyles.form}>

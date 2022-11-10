@@ -1,0 +1,61 @@
+.feed {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  background-color: #1c1c21;
+  border-radius: 40px;
+  text-decoration: none;
+  color: unset;
+  margin-right: 15px;
+}
+
+.order__details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.image_container {
+  display: flex;
+  margin-right: -30px;
+  flex-direction: row;
+  position: relative;
+}
+
+.container {
+  display: flex;
+}
+
+.items__number {
+  position: absolute;
+  z-index: 20;
+  top: 34%;
+  right: 0;
+  text-shadow: 5px 5px 20px black, 3px 3px 20px black, 3px 3px 20px black;
+}
+
+.image {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #4c4cff;
+  margin-right: -15px;
+  background-size: cover;
+  background-position: center;
+  background-color: #1c1c21;
+  box-sizing: border-box;
+}
+
+.price_container {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}

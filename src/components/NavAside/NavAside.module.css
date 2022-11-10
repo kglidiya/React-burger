@@ -1,0 +1,27 @@
+.list {
+  list-style: none;
+  width: 320px;
+  padding-left: 0;
+}
+
+.list_item {
+  height: 64px;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.link_active {
+  color: #f2f2f3;
+}
+
+.text {
+  margin-top: 70px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40px;
+}
