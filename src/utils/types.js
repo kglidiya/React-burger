@@ -16,7 +16,7 @@ export const ingredientType = PropTypes.shape({
 })
 
 export const navLinkPropTypes = PropTypes.shape({
-    value: PropTypes.PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
     active: PropTypes.bool.isRequired,
     iconPrimary: PropTypes.elementType.isRequired,
     iconSecondary: PropTypes.elementType.isRequired,
@@ -26,4 +26,16 @@ export const navLinkPropTypes = PropTypes.shape({
 export const stylePropTypes = PropTypes.shape({
     boxShadow: PropTypes.string
 });
+
+export const orderPropTypes = PropTypes.shape({
+    createdAt: PropTypes.string.isRequired,
+    ingredients: PropTypes.array.isRequired,
+    name: PropTypes.string.isRequired,
+    number: PropTypes.number.isRequired,
+    status: PropTypes.string.isRequired,
+    updatedAt: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired
+});
+
+
 

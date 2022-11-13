@@ -20,3 +20,9 @@
   align-items: center;
   justify-content: center;
 }
+
+.logo {
+  cursor: pointer;
+}
+
+

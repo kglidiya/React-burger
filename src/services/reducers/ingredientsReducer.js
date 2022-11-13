@@ -2,7 +2,7 @@ import {
     INGREDIENTS_ORDER_REQUEST,
     INGREDIENTS_ORDER_SUCCESS,
     INGREDIENTS_ORDER_ERROR
-} from './actions'
+} from '../actions/ingredientsActions'
 
 const initialState = {
     ingredientsRequest: false,

@@ -1,0 +1,10 @@
+.order {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background-color: #1c1c21;
+  border-radius: 40px;
+  text-decoration: none;
+  color: unset;
+  margin-right: 15px;
+}

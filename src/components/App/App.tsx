@@ -2,100 +2,139 @@ import { useEffect } from 'react';
 import React from 'react';
 import appStyles from './App.module.css';
 import AppHeader from '../AppHeader/AppHeader';
-import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
-import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
+import Main from '../../pages/Main/Main';
+import Profile from '../../pages/Profile/Profile';
+import Login from '../../pages/Login/Login';
+import Register from '../../pages/Register/Register';
+import ForgotPassword from '../../pages/ForgotPassword/ForgotPassword';
+import ResetPassword from '../../pages/ResetPassword/ResetPassword';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import NotFound404 from '../../pages/NotFound404/NotFound404';
+import Ingredients from '../../pages/Ingredients/Ingredients';
 import Modal from '../Modal/Modal';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import OrderDetails from '../OrderDetails/OrderDetails';
+import Feed from '../../pages/Feed/Feed';
+import FeedId from '../../pages/FeedId/FeedId';
+import OrderModal from '../OrderModal/OrderModal';
+import ProfileOrdersId from '../../pages/ProfileOrdersId/ProfileOrdersId';
+import ProfileOrders from '../../pages/ProfileOrders/ProfileOrders';
 import { useDispatch, useSelector } from 'react-redux';
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { getAllItems, setInitialConstructor } from '../../services/actions'
+import { getAllItems } from '../../services/actions/ingredientsActions';
+import { deleteCurrentIngredient } from '../../services/actions/currentIngredientActions';
+import { deleteCurrentOrder } from '../../services/actions/orderActions';
+import { getNewToken } from '../../services/actions/usersActions'
+import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
+import { Location } from 'history';
+import { getCookie } from '../../utils/cookie'
 
 
 function App() {
+  const location = useLocation<{ background: Location }>();
+  const state = useSelector((state: any) => state)
   const dispatch = useDispatch();
+  const history = useHistory()
+  const background = location.state && location.state.background;
+  const auth = state.userReducer.isAuthenticated
+  const token = getCookie('token')
+
   useEffect(() => {
     dispatch(getAllItems() as any)
-  }, [])
+    history.replace({ pathname: location.pathname })
 
-  const state = useSelector((state: any) => state);
-  const ingredients = state.ingredientsReducer.ingredients;
-  const isLoading = state.ingredientsReducer.ingredientsRequest;
-  const hasError = state.ingredientsReducer.ingredientsError;
-  const ingrediendsConstructor = state.constructorReducer.constructor;
+  }, [dispatch])
 
+  if (auth && token === undefined) {
+    dispatch(getNewToken() as any)
+  }
 
-  useEffect(() => {
-    dispatch(setInitialConstructor(ingredients))
-  }, [ingredients])
-
-  //Modals open/close
   const [currentModal, setCurrentModal] = React.useState('');
 
-  //Highlighting active constructor border
-  const [style, setStyle] = React.useState<any | null>();
+  function closeIngredientModal() {
+    setCurrentModal('')
+    dispatch(deleteCurrentIngredient())
+    history.replace({ pathname: '/' })
+  }
 
-  const [ingredientsConstructor, setIngredientsConstructor] = React.useState([ingrediendsConstructor]);
+  function closeFeedModal() {
+    setCurrentModal('')
+    history.replace({ pathname: '/feed' })
+    setTimeout(() => dispatch(deleteCurrentOrder()), 0)
+  }
 
-  const handleDrop = (itemId: any) => {
-
-    setIngredientsConstructor([
-      ...ingredientsConstructor,
-      ingrediendsConstructor.splice(2, 0, ...ingredients.filter((element: any) => element._id === itemId._id && element.type !== 'bun'))
-    ])
-
-    ingredients.map((el: any) => {
-
-      if (el.type === 'bun' && el._id === itemId._id) {
-        setIngredientsConstructor([
-          ingrediendsConstructor.splice(0, 2, el, el)
-        ])
-      }
-    })
-  };
+  function closeProfileOrderModal() {
+    setCurrentModal('')
+    history.replace({ pathname: '/profile/orders' })
+    setTimeout(() => dispatch(deleteCurrentOrder()), 0)
+  }
 
 
   return (
 
     <div className={appStyles.app}>
       <AppHeader />
-      <DndProvider backend={HTML5Backend}>
-        <main className={appStyles.main}>
-          {isLoading && 'Загрузка...'}
-          {hasError && 'Произошла ошибка'}
-          {!isLoading &&
-            !hasError &&
-            <BurgerIngredients
-              openPopup={setCurrentModal}
-              setStyle={setStyle}
-            />
-          }
-          {isLoading && 'Загрузка...'}
-          {hasError && 'Произошла ошибка'}
-          {!isLoading &&
-            !hasError &&
-            <BurgerConstructor
-              openPopup={setCurrentModal}
-              onDropHandler={handleDrop}
-              style={style} />
-          }
-        </main>
-      </DndProvider>
+      <Switch location={background || location}>
+
+        <ProtectedRoute path="/profile" exact={true}>
+          <Profile />
+        </ProtectedRoute >
+
+        <ProtectedRoute path="/profile/orders" exact={true}>
+          <ProfileOrders setCurrentModal={setCurrentModal} />
+        </ProtectedRoute>
+
+        <ProtectedRoute path="/profile/orders/:id" exact={true}>
+          <ProfileOrdersId />
+        </ProtectedRoute>
+
+        <Route path="/feed" exact={true}><Feed setCurrentModal={setCurrentModal} /></Route>
+        <Route path="/login" exact={true}><Login /></Route>
+        <Route path="/register" exact={true}><Register /></Route>
+        <Route path="/forgot-password" exact={true}><ForgotPassword /></Route>
+        <Route path="/reset-password" exact={true}><ResetPassword /></Route>
+        <Route path="/" exact={true}> <Main setCurrentModal={setCurrentModal} /> </Route>
+        <Route path="/feed/:id" exact={true}><FeedId /></Route>
+        <Route path="/ingredients/:id" exact={true}><Ingredients /></Route>
+        <Route><NotFound404 /></Route>
+
+      </Switch>
 
       <Modal
         isOpen={currentModal === 'IngredientPopup'}
-        onClose={setCurrentModal}
+        onClose={closeIngredientModal}
         height={'538px'}>
-        <IngredientDetails />
+        <Route path="/ingredients/:id" exact={true}>
+          <IngredientDetails />
+        </Route>
       </Modal>
+
+      <Modal
+        isOpen={currentModal === 'FeedPopup'}
+        onClose={closeFeedModal}
+        height={'auto'}>
+        <Route path="/feed/:id" >
+          <OrderModal />
+        </Route>
+      </Modal>
+
+      <Modal
+        isOpen={currentModal === 'ProfileOrderPopup'}
+        onClose={closeProfileOrderModal}
+        height={'auto'}>
+        <Route path="/profile/orders/:id"  >
+          <OrderModal />
+        </Route>
+      </Modal>
+
       <Modal
         isOpen={currentModal === 'OrderPopup'}
         onClose={setCurrentModal}
         height={'718px'}>
         <OrderDetails />
       </Modal>
+
     </div>
+
   );
 }
 

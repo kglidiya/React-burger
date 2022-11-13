@@ -1,34 +1,45 @@
-import React from 'react';
 import { Logo } from '@ya.praktikum/react-developer-burger-ui-components';
 import { BurgerIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ListIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import NavLink from './NavLink/NavLink';
-import headerStyles from './Header.module.css'
+import headerStyles from './Header.module.css';
+import { useLocation, useHistory, useParams } from 'react-router-dom';
+
 
 function AppHeader() {
-    const [current, setCurrent] = React.useState('one');
+    const { pathname } = useLocation()
+    const history = useHistory()
+    const onClick = () => {
+        history.replace({ pathname: '/' })
+    }
+    const id = useParams()
+
+
     return (
         <header className={headerStyles.header}>
             <nav className={headerStyles.content}>
                 <ul className={headerStyles.container}>
 
                     <NavLink
-                        value="one" active={current === 'one'} onClick={setCurrent}
+                        to={{ pathname: `/` }}
+                        active={pathname === "/"}
                         iconPrimary={<BurgerIcon type="primary" />}
                         iconSecondary={<BurgerIcon type="secondary" />}
                     > Конструктор </NavLink>
 
                     <NavLink
-                        value="two" active={current === 'two'} onClick={setCurrent}
+                        to={{ pathname: `/feed` }}
+                        active={pathname.startsWith('/feed')}
                         iconPrimary={<ListIcon type="primary" />}
                         iconSecondary={<ListIcon type="secondary" />}
                     > Лента заказов</NavLink>
 
-                    <Logo />
+                    <div onClick={onClick} className={headerStyles.logo}><Logo /></div>
 
                     <NavLink
-                        value="three" active={current === 'three'} onClick={setCurrent}
+                        to={{ pathname: `/profile` }}
+                        active={pathname.startsWith('/profile')}
                         iconPrimary={<ProfileIcon type="primary" />}
                         iconSecondary={<ProfileIcon type="secondary" />}
                     >Личный кабинет</NavLink>
@@ -36,7 +47,6 @@ function AppHeader() {
                 </ul>
             </nav>
         </header>
-
     )
 }
 

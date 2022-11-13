@@ -2,15 +2,18 @@ import {
   GET_ORDER_REQUEST,
   GET_ORDER_SUCCESS,
   GET_ORDER_ERROR,
-  SET_ORDER_DETAILS
-} from './actions'
+  SET_ORDER_DETAILS,
+  SET_CURRENT_ORDER,
+  DELETE_CURRENT_ORDER
+} from '../actions/orderActions'
 
 
 const initialState = {
   orderRequest: false,
   orderError: false,
   orderNumber: null,
-  orderDetails: []
+  orderDetails: [],
+  currentOrder: {}
 }
 
 
@@ -43,6 +46,19 @@ export const orderReducer = (state = initialState, action) => {
         ...state,
         orderDetails: action.payload.items
       }
+
+    case SET_CURRENT_ORDER:
+      return {
+        ...state,
+        currentOrder: action.payload
+      }
+
+    case DELETE_CURRENT_ORDER:
+      return {
+        ...state,
+        currentOrder: action.payload
+      }
+
     default: {
       return state
     }
