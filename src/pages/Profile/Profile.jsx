@@ -3,33 +3,16 @@ import ProfileStyles from './Profile.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import NavAside from '../../components/NavAside/NavAside';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { editUserDetails, getUserDetails, getNewToken } from '../../services/actions/usersActions'
-import { isTokenExpired } from '../../utils/token'
-import { getCookie} from "../../utils/cookie";
+import { editUserDetails, getUserDetails } from '../../services/actions/usersActions'
 
 
 function Profile() {
-    const user = useSelector(state => state.userReducer)
-    const dispatch = useDispatch()
-    const password = user.password
+    const user = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
+    const password = user.password;
 
-
-    function checkToken() {
-        let token = getCookie('token')
-        if (token === undefined) {
-           dispatch(getNewToken())
-        }
-        if (token !== undefined) {
-            const isExpired = isTokenExpired(token)
-            if (isExpired) {   
-                dispatch(getNewToken())
-            }
-        }
-    }
-  
     React.useEffect(() => {
-        checkToken()
-        setTimeout(() => dispatch(getUserDetails(password)), 0)
+        dispatch(getUserDetails(password))
     }, [])
 
     const [form, setValue] = React.useState({ name: user.userName, email: user.email, password: user.password });
@@ -48,7 +31,6 @@ function Profile() {
 
     function onSubmit(e) {
         e.preventDefault();
-        checkToken()
         setTimeout(() => dispatch(editUserDetails(form.email, form.password, form.name)), 0)
         setIsChanged(false)
     }
@@ -63,8 +45,8 @@ function Profile() {
     return (
 
         <main className={ProfileStyles.main}>
-            <NavAside text={'В этом разделе вы можете изменить свои персональные данные'}/>
-         
+            <NavAside text={'В этом разделе вы можете изменить свои персональные данные'} />
+
             <div className={ProfileStyles.container}>
 
                 <form onSubmit={onSubmit} className={ProfileStyles.form}>

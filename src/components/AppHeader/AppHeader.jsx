@@ -30,7 +30,7 @@ function AppHeader() {
 
                     <NavLink
                         to={{ pathname: `/feed` }}
-                        active={pathname === '/feed'}
+                        active={pathname.startsWith('/feed')}
                         iconPrimary={<ListIcon type="primary" />}
                         iconSecondary={<ListIcon type="secondary" />}
                     > Лента заказов</NavLink>
@@ -39,7 +39,7 @@ function AppHeader() {
 
                     <NavLink
                         to={{ pathname: `/profile` }}
-                        active={pathname === '/profile' || pathname === `/profile/orders/${id}` || pathname === '/profile/orders'}
+                        active={pathname.startsWith('/profile')}
                         iconPrimary={<ProfileIcon type="primary" />}
                         iconSecondary={<ProfileIcon type="secondary" />}
                     >Личный кабинет</NavLink>

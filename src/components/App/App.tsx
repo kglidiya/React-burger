@@ -19,36 +19,35 @@ import FeedId from '../../pages/FeedId/FeedId';
 import OrderModal from '../OrderModal/OrderModal';
 import ProfileOrdersId from '../../pages/ProfileOrdersId/ProfileOrdersId';
 import ProfileOrders from '../../pages/ProfileOrders/ProfileOrders';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllItems } from '../../services/actions/ingredientsActions';
 import { deleteCurrentIngredient } from '../../services/actions/currentIngredientActions';
-import { deleteCurrentOrder } from '../../services/actions/orderActions'
+import { deleteCurrentOrder } from '../../services/actions/orderActions';
+import { getNewToken } from '../../services/actions/usersActions'
 import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 import { Location } from 'history';
-import { WS_CONNECTION_CLOSED } from '../../services/actions/wsActions'
+import { getCookie } from '../../utils/cookie'
 
 
 function App() {
   const location = useLocation<{ background: Location }>();
-  const { pathname } = useLocation()
+  const state = useSelector((state: any) => state)
+  const dispatch = useDispatch();
+  const history = useHistory()
+  const background = location.state && location.state.background;
+  const auth = state.userReducer.isAuthenticated
+  const token = getCookie('token')
 
   useEffect(() => {
     dispatch(getAllItems() as any)
     history.replace({ pathname: location.pathname })
-  }, [])
 
-  useEffect(() => {
-    if (pathname !== '/feed') {
-      dispatch({ type: WS_CONNECTION_CLOSED })
-    }
-    if (pathname !== '/profile/orders') {
-      dispatch({ type: WS_CONNECTION_CLOSED })
-    }
-  }, [pathname])
+  }, [dispatch])
 
-  const history = useHistory()
-  const background = location.state && location.state.background;
-  const dispatch = useDispatch();
+  if (auth && token === undefined) {
+    dispatch(getNewToken() as any)
+  }
+
   const [currentModal, setCurrentModal] = React.useState('');
 
   function closeIngredientModal() {

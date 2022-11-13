@@ -1,19 +1,34 @@
 import React from 'react';
 import OrderStyles from './ProfileOrderId.module.css';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import CurrentOrder from '../../components/CurrentOrder/CurrentOrder';
+import Loader from '../../components/Loader/Loader';
+import { getCookie } from "../../utils/cookie";
+import { WS_CONNECTION_START, WS_GET_MESSAGE, WS_CONNECTION_CLOSED, WS_DELETE_ORDERS } from '../../services/actions/wsActions'
 
 function ProfileOrdersId() {
+    const dispatch = useDispatch();
+    const accessToken = getCookie('token');
     const state = useSelector((state) => state);
     const ingredients = state.ingredientsReducer.ingredients;
     const data = state.wsReducer.orders;
+    const { id } = useParams();
 
-    let orders
+    React.useEffect(() => {
+        dispatch({ type: WS_CONNECTION_START, payload: `?token=${accessToken}` });
+        dispatch({ type: WS_GET_MESSAGE })
+
+        return () => {
+            dispatch({ type: WS_CONNECTION_CLOSED })
+            dispatch({ type: WS_DELETE_ORDERS })
+        }
+    }, [])
+
+    let orders;
     if (data !== undefined) {
         orders = data.orders
     }
-    const { id } = useParams()
 
     let order;
     const ingredientsFiltered = []
@@ -35,24 +50,21 @@ function ProfileOrdersId() {
                 counts[el._id] = counts[el._id] ? (counts[el._id] + 1) : 1;
             });
         }
-    }, [orders, state, ingredients])
-    console.log(state)
+    }, [orders, ingredients])
+
 
     return (
         <div className={OrderStyles.main}>
             <div className={OrderStyles.container}>
-                {orders === undefined && 'Информация загружается'}
-                { order !== undefined &&
+                {orders === undefined && <Loader />}
+                {order !== undefined &&
                     <CurrentOrder
-                        order={order}
                         ingredients={ingredients}
                         counts={counts}
                         price={price}
                     />}
             </div>
         </div>
-
-
     )
 }
 

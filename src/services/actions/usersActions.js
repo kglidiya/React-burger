@@ -8,8 +8,9 @@ import {
   refreshToken,
   sendNewPassword
 } from "../../utils/api";
-import { setCookie } from '../../utils/cookie.js'
+import { setCookie, deleteCookie } from '../../utils/cookie.js'
 import { setInitialConstructor } from '../../services/actions/constructorActions'
+import { WS_DELETE_ORDERS } from './wsActions'
 
 export const REGISTER_USER = 'REGISTER_USER';
 export const RESET_PASSWORD = 'RESET_PASSWORD';
@@ -89,7 +90,7 @@ export function registerNewUser(name, email, password) {
           authToken = data.accessToken.split('Bearer ')[1]
           refreshToken = data.refreshToken
           localStorage.setItem('token', refreshToken)
-           setCookie('token', authToken);
+          setCookie('token', authToken, { path: "/", expires: 1140 });
         }
       })
       .catch(err => {
@@ -109,7 +110,7 @@ export function signIn(userEmail, userPassword) {
           dispatch(setUser(data.user.name, userEmail, userPassword))
           authToken = data.accessToken.split('Bearer ')[1]
           refreshToken = data.refreshToken
-          setCookie('token', authToken);
+          setCookie('token', authToken, { path: "/", expires: 1140 });
           localStorage.setItem('token', refreshToken)
         }
       })
@@ -126,6 +127,9 @@ export function signOut() {
         if (data.success === true) {
           dispatch(resetUser())
           dispatch(setInitialConstructor())
+          deleteCookie('token');
+          localStorage.removeItem('token')
+          dispatch({ type: WS_DELETE_ORDERS })
         }
       })
       .catch(err => {
@@ -138,7 +142,7 @@ export function signOut() {
 export function getUserDetails(password) {
   return function (dispatch) {
     getUser()
-        .then(data => {
+      .then(data => {
         if (data.success === true) {
           dispatch(setUser(data.user.name, data.user.email, password))
           dispatch(authenticate())
@@ -154,7 +158,6 @@ export function getNewToken() {
   return function (dispatch) {
     refreshToken()
       .then(data => {
-        console.log(data)
         let authToken;
         let refreshToken;
         if (data.success === true) {
@@ -162,7 +165,7 @@ export function getNewToken() {
           authToken = data.accessToken.split('Bearer ')[1]
           refreshToken = data.refreshToken
           localStorage.setItem('token', refreshToken)
-          setCookie('token', authToken);
+          setCookie('token', authToken, { path: "/", expires: 1140 });
         }
       })
       .catch(err => {

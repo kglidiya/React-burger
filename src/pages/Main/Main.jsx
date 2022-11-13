@@ -5,7 +5,7 @@ import BurgerConstructor from '../../components/BurgerConstructor/BurgerConstruc
 import { useSelector } from 'react-redux';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-
+import Loader from '../../components/Loader/Loader';
 
 function Main({ setCurrentModal }) {
 
@@ -47,26 +47,35 @@ function Main({ setCurrentModal }) {
   return (
     <>
       <DndProvider backend={HTML5Backend}>
-        {isLoading && "Загрузка"}
-        {hasError && "Произошла ошибка"}
+       
 
         <main className={appStyles.main}>
+        {isLoading && <Loader/>}
+        {hasError && "Произошла ошибка"}
           {!isLoading &&
             !hasError &&
+            <>
             <BurgerIngredients
               openPopup={setCurrentModal}
               setStyle={setStyle}
             />
+            <BurgerConstructor
+              openPopup={setCurrentModal}
+              onDropHandler={handleDrop}
+              style={style}
+            />
+            </>
+        
           }
 
-          {!isLoading &&
+          {/* {!isLoading &&
             !hasError &&
             <BurgerConstructor
               openPopup={setCurrentModal}
               onDropHandler={handleDrop}
               style={style}
             />
-          }
+          } */}
         </main>
       </DndProvider>
     </>

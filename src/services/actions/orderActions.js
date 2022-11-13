@@ -46,10 +46,6 @@ export function getOrderNumber(ingredientsId, openPopup) {
           })
           openPopup('OrderPopup')
           dispatch(setInitialConstructor())
-          dispatch({
-            type: WS_SEND_MESSAGE,
-            payload: data.order
-          })
         } else {
           dispatch({
             type: GET_ORDER_ERROR

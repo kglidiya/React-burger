@@ -34,7 +34,6 @@ export const orderPropTypes = PropTypes.shape({
     number: PropTypes.number.isRequired,
     status: PropTypes.string.isRequired,
     updatedAt: PropTypes.string.isRequired,
-    uuid: PropTypes.string,
     _id: PropTypes.string.isRequired
 });
 

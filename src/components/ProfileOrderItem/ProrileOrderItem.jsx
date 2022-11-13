@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, useLocation } from 'react-router-dom';
-import uuid from 'react-uuid';
 import { useSelector, useDispatch } from 'react-redux';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import FeedStyes from "../FeedOrderItem/FeedOrderItem.module.css";
@@ -66,11 +65,10 @@ function ProrileOrderItem({ order, openPopup, path, popup }) {
                         const ordersUnique = [...set]
                         const ordersCut = ordersUnique.slice(0, 6)
                         const restItems = (ordersUnique.length) - ordersCut.length
-                        el.uuid = uuid()
                         for (let i = 0; i < ordersCut.length; i++) {
                             if (el._id === ordersCut[i]) {
                                 return (
-                                    <div key={el.uuid}
+                                    <div key={el._id}
                                         className={FeedStyes.container}>
                                         <span className={FeedStyes.image}
                                             style={{

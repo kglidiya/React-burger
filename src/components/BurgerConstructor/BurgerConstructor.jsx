@@ -4,8 +4,6 @@ import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 import { stylePropTypes } from "../../utils/types";
-import { isTokenExpired } from "../../utils/token";
-import { getCookie } from "../../utils/cookie";
 import React from "react";
 import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +18,6 @@ import {
     GET_ORDER_REQUEST,
     GET_ORDER_ERROR,
 } from "../../services/actions/orderActions";
-import { getNewToken } from "../../services/actions/usersActions";
 import { useHistory } from "react-router-dom";
 import uuid from 'react-uuid';
 
@@ -46,7 +43,6 @@ function BurgerConstructor({ openPopup, onDropHandler, style }) {
     const listRef = React.useRef([]);
     let priceTotal = 0;
     const ingredientsIds = [];
-    const token = getCookie("token");
     const [price, setPrice] = React.useState(0);
     const [isFillings, setIsFillings] = React.useState(false);
 
@@ -105,17 +101,6 @@ function BurgerConstructor({ openPopup, onDropHandler, style }) {
         history.replace({ pathname: "/login", state: "/" });
     }
 
-    function checkToken() {
-        if (token === undefined) {
-            dispatch(getNewToken());
-        }
-        if (token !== undefined) {
-            const isExpired = isTokenExpired(token);
-            if (isExpired) {
-                dispatch(getNewToken());
-            }
-        }
-    }
 
     return (
         <aside className={constructorStyles.sidebar}>
@@ -236,15 +221,12 @@ function BurgerConstructor({ openPopup, onDropHandler, style }) {
                             });
                         }
                         if (auth && isBun) {
-                            checkToken();
-                            setTimeout(() => {
-                                dispatch({
-                                    type: GET_ORDER_REQUEST,
-                                });
-                                dispatch(
-                                    getOrderNumber(ingredientsIds, openPopup, ingredients)
-                                );
-                            }, 0);
+                            dispatch({
+                                type: GET_ORDER_REQUEST,
+                            });
+                            dispatch(
+                                getOrderNumber(ingredientsIds, openPopup, ingredients)
+                            );
                         }
                     }}
                 >

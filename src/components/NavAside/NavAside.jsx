@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 
 function NavAside({ text }) {
-    
+
     const dispatch = useDispatch()
     const auth = useSelector(state => state.userReducer.isAuthenticated)
 

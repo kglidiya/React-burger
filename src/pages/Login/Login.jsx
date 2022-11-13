@@ -9,7 +9,9 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { signIn } from "../../services/actions/usersActions";
 
+
 function Login() {
+
     const history = useHistory();
     const dispatch = useDispatch();
     const auth = useSelector((state) => state.userReducer.isAuthenticated);
@@ -24,7 +26,7 @@ function Login() {
             e.preventDefault();
             dispatch(signIn(form.email, form.password));
         },
-        [form]
+        [form, dispatch]
     );
 
     if (auth) {

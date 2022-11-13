@@ -2,17 +2,21 @@ import React from "react";
 import FeedStyes from "./Feed.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import FeedOrderItem from "../../components/FeedOrderItem/FeedOrderItem";
-import uuid from "react-uuid";
-import { WS_CONNECTION_START_ORDERS_ALL, WS_GET_MESSAGE } from '../../services/actions/wsActions'
-
+import {WS_CONNECTION_START, WS_GET_MESSAGE, WS_CONNECTION_CLOSED, WS_DELETE_ORDERS } from '../../services/actions/wsActions'
+import Loader from "../../components/Loader/Loader";
 
 function Feed({ setCurrentModal }) {
     const dispatch = useDispatch();
     React.useEffect(() => {
-        dispatch({ type: WS_CONNECTION_START_ORDERS_ALL });
+        dispatch({ type: WS_CONNECTION_START, payload: `/all` });
         dispatch({ type: WS_GET_MESSAGE })
 
-    }, [])
+        return () => {
+            dispatch({ type: WS_CONNECTION_CLOSED })
+            dispatch({type: WS_DELETE_ORDERS })
+        }
+
+    }, [dispatch])
 
     const data = useSelector((state => (state.wsReducer.orders)));
     let orders;
@@ -33,17 +37,16 @@ function Feed({ setCurrentModal }) {
     return (
 
         <main className={FeedStyes.main}>
-            {orders === undefined && 'Информация загружается'}
+            {orders === undefined && <Loader/>}
             {orders !== undefined && <>
                 <h2 className="text text_type_main-large mb-5">Лента заказов</h2>
                 <div className={FeedStyes.main__container}>
                     <div className={FeedStyes.scroll}>
                         <section className={FeedStyes.feed}>
                             {orders.map(order => {
-                                order.uuid = uuid()
                                 return (
                                     <FeedOrderItem
-                                        key={order.uuid}
+                                        key={order._id}
                                         order={order}
                                         path={`/feed/${order._id}`}
                                         openPopup={setCurrentModal}

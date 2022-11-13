@@ -1,8 +1,3 @@
-import { getCookie } from '../../utils/cookie'
-import { getNewToken } from '../actions/usersActions';
-import { isTokenExpired } from '../../utils/token';
-
-
 export const socketMiddleware = (wsUrl, wsActions) => {
   return (store) => {
 
@@ -11,37 +6,19 @@ export const socketMiddleware = (wsUrl, wsActions) => {
     return (next) => (action) => {
       const { dispatch } = store;
       const { type, payload } = action;
-      const { wsInitOrdersAll,
-        wsInitOrdersUser,
+      const { wsInit,
         wsSendMessage,
         onOpen,
         onClose,
         onError,
         onMessage } = wsActions;
-     
 
-      if (type === wsInitOrdersAll) {
-        socket = new WebSocket(`${wsUrl}/all`);
-      }
 
-      if (type === wsInitOrdersUser) {
-        let token = getCookie('token')
-        const isExpired = isTokenExpired(token)
-        if (!isExpired) {
-         //console.log('!isExpired')
-          socket = new WebSocket(`${wsUrl}?token=${token}`)
-        }
-        if (isExpired) {
-       // console.log('isExpired')
-          dispatch(getNewToken())
-          setTimeout(() => {
-            socket = new WebSocket(`${wsUrl}?token=${token}`)
-          }, 0)
-        }
+      if (type === wsInit) {
+        socket = new WebSocket(`${wsUrl}${payload}`);
       }
 
       if (socket) {
-
         socket.onopen = (event) => {
           dispatch({ type: onOpen, payload: event });
         };
@@ -52,12 +29,14 @@ export const socketMiddleware = (wsUrl, wsActions) => {
 
         socket.onmessage = (event) => {
           const data = JSON.parse(event.data);
-          dispatch({ type: onMessage, payload: data });
+          if (data.success) {
+            dispatch({ type: onMessage, payload: data });
+          }
         };
 
-        socket.onclose = (event) => {
-          dispatch({ type: onClose, payload: event });
-        };
+        if (type === onClose) {
+          socket.close()
+        }
 
         if (type === wsSendMessage) {
           const message = payload;
