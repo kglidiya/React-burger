@@ -68,14 +68,6 @@ function Main({ setCurrentModal }) {
         
           }
 
-          {/* {!isLoading &&
-            !hasError &&
-            <BurgerConstructor
-              openPopup={setCurrentModal}
-              onDropHandler={handleDrop}
-              style={style}
-            />
-          } */}
         </main>
       </DndProvider>
     </>
