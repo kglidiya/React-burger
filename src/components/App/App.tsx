@@ -19,40 +19,44 @@ import FeedId from '../../pages/FeedId/FeedId';
 import OrderModal from '../OrderModal/OrderModal';
 import ProfileOrdersId from '../../pages/ProfileOrdersId/ProfileOrdersId';
 import ProfileOrders from '../../pages/ProfileOrders/ProfileOrders';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../services/hooks/hooks';
 import { getAllItems } from '../../services/actions/ingredientsActions';
 import { deleteCurrentIngredient } from '../../services/actions/currentIngredientActions';
 import { deleteCurrentOrder } from '../../services/actions/orderActions';
-import { getNewToken } from '../../services/actions/usersActions'
+import { getNewToken, authenticate } from '../../services/actions/usersActions'
 import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { getCookie } from '../../utils/cookie'
-
+import { IIngredient } from '../../utils/types';
 
 function App() {
   const location = useLocation<{ background: Location }>();
-  const state = useSelector((state: any) => state)
+  const state = useSelector(state => state)
   const dispatch = useDispatch();
   const history = useHistory()
   const background = location.state && location.state.background;
   const auth = state.userReducer.isAuthenticated
-  const token = getCookie('token')
+  const token: string | undefined = getCookie('token')
+  const refreshToken: string | undefined = localStorage['token']
 
   useEffect(() => {
-    dispatch(getAllItems() as any)
+    if (refreshToken === undefined) {
+      dispatch(authenticate(false))
+    }
+    dispatch(getAllItems())
     history.replace({ pathname: location.pathname })
+  }, [])
 
-  }, [dispatch])
 
   if (auth && token === undefined) {
-    dispatch(getNewToken() as any)
+    dispatch(getNewToken())
   }
 
-  const [currentModal, setCurrentModal] = React.useState('');
+  const [currentModal, setCurrentModal] = React.useState<string>('');
 
   function closeIngredientModal() {
     setCurrentModal('')
-    dispatch(deleteCurrentIngredient())
+    dispatch(deleteCurrentIngredient({} as IIngredient))
     history.replace({ pathname: '/' })
   }
 
@@ -68,6 +72,9 @@ function App() {
     setTimeout(() => dispatch(deleteCurrentOrder()), 0)
   }
 
+  function closeOrderPopup() {
+    setCurrentModal('')
+  }
 
   return (
 
@@ -128,7 +135,7 @@ function App() {
 
       <Modal
         isOpen={currentModal === 'OrderPopup'}
-        onClose={setCurrentModal}
+        onClose={closeOrderPopup}
         height={'718px'}>
         <OrderDetails />
       </Modal>
