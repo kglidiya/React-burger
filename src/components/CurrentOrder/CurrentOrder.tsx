@@ -5,7 +5,7 @@ import { IIngredient } from '../../utils/types'
 import { useSelector } from '../../services/hooks/hooks';
 import { useParams } from 'react-router-dom';
 import { FC } from 'react';
-import { ICounts, IOrder } from '../../utils/types'
+import { ICounts } from '../../utils/types'
 
 
 interface ICurrentOrder {
@@ -19,7 +19,7 @@ const CurrentOrder: FC<ICurrentOrder> = ({ ingredients, counts, price }) => {
 
     const orders = useSelector((state) => state.wsReducer.orders);
     const { id } = useParams<{ id?: string }>()
-    const order = orders.orders.filter((el: IOrder) => el._id === id)[0]
+    const order = orders.orders.filter(el => el._id === id)[0]
 
 
     return (

@@ -1,7 +1,7 @@
 import ingredientDetails from './Ingredients.module.css';
 import { useSelector } from '../../services/hooks/hooks';
 import { useParams } from 'react-router-dom';
-import { IIngredient } from '../../utils/types'
+
 
 function Ingredients() {
     const state = useSelector(state => state);
@@ -11,7 +11,7 @@ function Ingredients() {
 
     return (
         <main className={ingredientDetails.main}>
-            {ingredients.map((el: IIngredient) => {
+            {ingredients.map((el) => {
                 if (el._id === id) {
                     return (<div className={ingredientDetails.container} key={el._id} >
                         <h3 className={`${ingredientDetails.header} text text_type_main-large`}>Детали ингредиента</h3>

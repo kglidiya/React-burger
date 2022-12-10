@@ -52,7 +52,7 @@ const Ingredient: FC<IIngredientProps> = ({ openPopup, ingredient, setStyle }) =
                 openPopup("IngredientPopup");
                 dispatch(setCurrentIngredient(ingredient))
             }}>
-            {ingredientsConstructor.map((el: IIngredient, index: number) => {
+            {ingredientsConstructor.map((el, index: number) => {
                 if (el._id === ingredient._id) {
                     count++;
                     return <Counter count={count} size="default" key={index} />;

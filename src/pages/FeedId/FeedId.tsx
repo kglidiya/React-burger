@@ -24,10 +24,8 @@ function FeedId() {
         dispatch({ type: WS_CONNECTION_START, payload: `/all` });
         dispatch({ type: WS_GET_MESSAGE })
 
-        setTimeout(() => {
-            dispatch({ type: WS_CONNECTION_CLOSED })
-        }, 300)
         return () => {
+            dispatch({ type: WS_CONNECTION_CLOSED })
             dispatch({ type: WS_DELETE_ORDERS, payload: [] as IOrder[] })
         }
 
@@ -39,8 +37,8 @@ function FeedId() {
 
     React.useMemo(() => {
         if (orders !== undefined) {
-            order = orders.filter((el: IOrder) => el._id === id)[0]
-            ingredients.filter((el: IIngredient) => {
+            order = orders.filter((el) => el._id === id)[0]
+            ingredients.filter((el) => {
 
                 for (let item of order.ingredients) {
                     if (el._id === item) {
@@ -49,7 +47,7 @@ function FeedId() {
                     }
                 }
             })
-            ingredientsFiltered.forEach((el: IIngredient) => {
+            ingredientsFiltered.forEach((el) => {
                 counts[el._id] = counts[el._id] ? (counts[el._id] + 1) : 1;
             });
         }

@@ -1,49 +1,50 @@
 import { Dispatch } from 'redux';
 import {
-  WS_CONNECTION_START,
-  WS_CONNECTION_SUCCESS,
-  WS_CONNECTION_ERROR,
-  WS_CONNECTION_CLOSED,
-  WS_GET_MESSAGE,
-  WS_SEND_MESSAGE,
-  TWsActions
+  TWsActions, 
+  TWSActionsObj
 } from '../actions/wsActions';
 
 
-export const socketMiddleware = (wsUrl: string) => {
+export const socketMiddleware = (wsUrl: string, wsActions: TWSActionsObj) => {
   return (store: { dispatch: Dispatch<TWsActions> }) => {
 
     let socket: WebSocket | null = null;
 
     return (next: Dispatch<TWsActions>) => (action: TWsActions) => {
       const { dispatch } = store;
-      if (action.type === WS_CONNECTION_START) {
+      const { wsInit,
+        wsSendMessage,
+        onOpen,
+        onClose,
+        onError,
+        onMessage } = wsActions;
+      if (action.type === wsInit) {
         socket = new WebSocket(`${wsUrl}${action.payload}`);
-
+     
       }
 
       if (socket) {
         socket.onopen = (event: any) => {
-          dispatch({ type: WS_CONNECTION_SUCCESS, payload: event });
+          dispatch({ type: onOpen, payload: event });
 
         };
 
         socket.onerror = (event: any) => {
-          dispatch({ type: WS_CONNECTION_ERROR, payload: event });
+          dispatch({ type: onError, payload: event });
         };
 
         socket.onmessage = (event: any) => {
           const data = JSON.parse(event.data);
           if (data.success) {
-            dispatch({ type: WS_GET_MESSAGE, payload: data });
+            dispatch({ type: onMessage, payload: data });
           }
         };
 
-        if (action.type === WS_CONNECTION_CLOSED) {
+        if (action.type ===  onClose) {
           socket.close()
         }
 
-        if (action.type === WS_SEND_MESSAGE) {
+        if (action.type === wsSendMessage) {
           const message = action.payload;
           socket.send(JSON.stringify(message));
         }

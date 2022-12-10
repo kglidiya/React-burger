@@ -16,8 +16,6 @@ import {
     GET_ORDER_ERROR,
 } from "../../services/actions/orderActions";
 import { useHistory } from "react-router-dom";
-import { IIngredient} from '../../utils/types'
-
 
 
 
@@ -57,7 +55,7 @@ const BurgerConstructor: FC<IBurgerConstructorProps> = ({ openPopup, onDropHandl
 
 
     function getIngredientsId() {
-        ingrediendsConstructor.map((el: IIngredient) => {
+        ingrediendsConstructor.map((el) => {
             ingredientsIds.push(el._id);
         });
     }
@@ -67,7 +65,7 @@ const BurgerConstructor: FC<IBurgerConstructorProps> = ({ openPopup, onDropHandl
             setIsFillings(false);
             setPrice(0)
         }
-        ingrediendsConstructor.forEach((el: IIngredient) => {
+        ingrediendsConstructor.forEach((el) => {
             priceTotal += el.price;
             setPrice(priceTotal);
             if (el.type === "main" || el.type === "sauce") {
@@ -108,7 +106,7 @@ const BurgerConstructor: FC<IBurgerConstructorProps> = ({ openPopup, onDropHandl
                             </div>
                         )}
                         {isBun &&
-                            ingrediendsConstructor.map((item: IIngredient, i: number) => {
+                            ingrediendsConstructor.map((item, i: number) => {
                                 if (item.type === "bun" && i === 0) {
                                     return (
                                         <div
@@ -134,7 +132,7 @@ const BurgerConstructor: FC<IBurgerConstructorProps> = ({ openPopup, onDropHandl
                             {!isFillings && (
                                 <div className={constructorStyles.background}></div>
                             )}
-                            {ingrediendsConstructor.map((item: IIngredient, i: number) => {
+                            {ingrediendsConstructor.map((item, i: number) => {
 
                                 if (item.type === "main" || item.type === "sauce") {
                                     if (item.name === "Соус Spicy-X") {
@@ -169,7 +167,7 @@ const BurgerConstructor: FC<IBurgerConstructorProps> = ({ openPopup, onDropHandl
                             </div>
                         )}
                         {isBun &&
-                            ingrediendsConstructor.map((item: IIngredient, i: number) => {
+                            ingrediendsConstructor.map((item, i: number) => {
                                 if (item.type === "bun" && i === 1) {
                                     return (
                                         <div

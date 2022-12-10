@@ -3,7 +3,6 @@ import { FC,  Dispatch, SetStateAction } from "react";
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerStyles from './BurgerIngredients.module.css';
 import Ingredient from "./Ingredient/Ingredient";
-import { IIngredient } from '../../utils/types'
 import { useSelector } from '../../services/hooks/hooks';
 
 
@@ -86,7 +85,7 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({ openPopup, setStyle })
                 <section ref={refBunsContainer}>
                     <h2 className="text text_type_main-medium pb-2 pt-5 mb-5 mt-5"> Булки</h2>
                     <div className={burgerStyles.container} >
-                        {ingredients.map((item: IIngredient) => {
+                        {ingredients.map((item) => {
 
                             if (item.type === 'bun') {
                                 return (<Ingredient
@@ -104,7 +103,7 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({ openPopup, setStyle })
                 <section ref={refSauceContainer}>
                     <h2 className="text text_type_main-medium mb-5 pb-2"> Соусы</h2>
                     <div className={burgerStyles.container} >
-                        {ingredients.map((item: IIngredient) => {
+                        {ingredients.map((item) => {
                             if (item.type === 'sauce') {
                                 return (<Ingredient
                                     setStyle={setStyle}
@@ -120,7 +119,7 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({ openPopup, setStyle })
                 <section ref={refMainContainer}>
                     <h2 className="text text_type_main-medium pb-2 pt-5 mb-5 mt-5"> Начинки</h2>
                     <div className={burgerStyles.container} >
-                        {ingredients.map((item: IIngredient) => {
+                        {ingredients.map((item) => {
                             if (item.type === 'main') {
                                 return (<Ingredient
                                     setStyle={setStyle}

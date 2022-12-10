@@ -58,7 +58,7 @@ const ProrileOrderItem: FC<IOrderItemProps> = ({ order, openPopup, path, popup }
             <p className="text text_type_main-default mb-5 pb-1" style={{ color: status === 'Выполнен' ? '#00CCCC' : '#F2F2F3' }}>{status}</p>
             <div className={FeedStyes.order__details}>
                 <div className={FeedStyes.image_container}>
-                    {ingredients.map((el: IIngredient, index: number) => {
+                    {ingredients.map((el, index) => {
                         const set = new Set(order.ingredients)
                         const ordersUnique = Array.from(set)
                         const ordersCut = ordersUnique.slice(0, 6)

@@ -20,13 +20,9 @@ function ProfileOrdersId() {
     React.useEffect(() => {
         dispatch({ type: WS_CONNECTION_START, payload: `?token=${accessToken}` });
         dispatch({ type: WS_GET_MESSAGE })
-
-        setTimeout(() => {
-            dispatch({ type: WS_CONNECTION_CLOSED })
-        }, 300)
-
+    
         return () => {
-           // dispatch({ type: WS_CONNECTION_CLOSED })
+         dispatch({ type: WS_CONNECTION_CLOSED })
             dispatch({ type: WS_DELETE_ORDERS, payload: [] as IOrder[] })
         }
     }, [dispatch, accessToken])
@@ -44,7 +40,7 @@ function ProfileOrdersId() {
     React.useMemo(() => {
         if (orders !== undefined) {
             order = orders.filter(el => el._id === id)[0]
-            ingredients.filter((el: IIngredient) => {
+            ingredients.filter((el) => {
                 for (let item of order.ingredients) {
                     if (el._id === item) {
                         ingredientsFiltered.push(el)

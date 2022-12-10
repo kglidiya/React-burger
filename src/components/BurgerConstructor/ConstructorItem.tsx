@@ -53,7 +53,7 @@ const ConstructorItem: FC<IConstructorItemProps> = ({ el, index, moveListItem, u
     const opacity = isDragging ? 0 : 1
 
     function deleteIngredient() {
-        ingrediendsConstructor.map((el: IIngredient) => {
+        ingrediendsConstructor.map((el) => {
             if (uuid === el.uuid) {
                 dispatch(deleteItem(uuid))
             }

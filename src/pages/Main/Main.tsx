@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from '../../services/hooks/hooks';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Loader from '../../components/Loader/Loader';
-import { IIngredient } from '../../utils/types';
 import { addItem } from '../../services/actions/constructorActions';
 
 
@@ -26,7 +25,7 @@ const Main: FC<{ setCurrentModal: Dispatch<SetStateAction<string>> }> = ({ setCu
   const [, setIngredientsConstructor] = React.useState([ingredientsConstructor]);
 
   const handleDrop = (itemId: { _id: string }) => {
-    ingredients.map((el: IIngredient) => {
+    ingredients.map((el) => {
       if (el.type === 'bun' && el._id === itemId._id) {
         isBun ?
           setIngredientsConstructor([
@@ -37,7 +36,7 @@ const Main: FC<{ setCurrentModal: Dispatch<SetStateAction<string>> }> = ({ setCu
           ])
       }
     })
-    ingredients.map((el: IIngredient) => {
+    ingredients.map((el) => {
       if (el.type !== 'bun' && el._id === itemId._id) {
         dispatch(addItem(el))
       }

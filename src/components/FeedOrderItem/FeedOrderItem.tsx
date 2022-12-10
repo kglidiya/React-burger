@@ -18,7 +18,7 @@ const FeedOrderItem: FC<IOrderItemProps> = ({ order, openPopup, path, popup }) =
     const totalPrice = (ingredientsAll: IIngredient[], orders: string[]) => {
 
         let price = 0
-        ingredientsAll.forEach((el: IIngredient) => {
+        ingredientsAll.forEach((el) => {
             for (let i = orders.length - 1; i >= 0; i--) {
                 if (el._id === orders[i]) {
                     price += el.price
@@ -48,7 +48,7 @@ const FeedOrderItem: FC<IOrderItemProps> = ({ order, openPopup, path, popup }) =
             <p className="text text_type_main-medium">{order.name}</p>
             <div className={FeedStyes.order__details}>
                 <div className={FeedStyes.image_container}>
-                    {ingredients.map((el: IIngredient, index: number) => {
+                    {ingredients.map((el, index: number) => {
                         const set = new Set(order.ingredients)
                         const ordersUnique = Array.from(set)
                         const ordersCut = ordersUnique.slice(0, 6)

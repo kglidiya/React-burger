@@ -17,7 +17,7 @@ import { socketMiddleware } from './services/middleware/socketMiddleware';
 import { Action, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { TApplicationActions } from './utils/types'
-
+import { wsActions } from './services/actions/wsActions';
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -42,7 +42,7 @@ declare global {
 export const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const enhancer = composeEnhancers(applyMiddleware(thunk,
-  socketMiddleware(wsUrl)
+  socketMiddleware(wsUrl, wsActions)
 ));
 
 const rootState = combineReducers({

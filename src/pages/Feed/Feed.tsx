@@ -66,7 +66,7 @@ const Feed: FC<{ setCurrentModal: Dispatch<SetStateAction<string>> }> = ({ setCu
                             <div className={FeedStyes.orders}>
                                 <p className="text text_type_main-medium mb-2">Готовы:</p>
                                 <div className={FeedStyes.scroll_x}>
-                                    {orders !== undefined && sliceIntoChunks(orders.filter((el: IOrder) => el.status === 'done'), 10).map((el, i) => {
+                                    {orders !== undefined && sliceIntoChunks(orders.filter(el => el.status === 'done'), 10).map((el, i) => {
                                         return (
                                             <ul className={FeedStyes.list} key={i}>
                                                 {el.map((chunk, i) => {
@@ -85,7 +85,7 @@ const Feed: FC<{ setCurrentModal: Dispatch<SetStateAction<string>> }> = ({ setCu
                             <div className={FeedStyes.orders}>
                                 <p className="text text_type_main-medium">В работе:</p>
                                 <div className={FeedStyes.scroll_x}>
-                                    {orders !== undefined && sliceIntoChunks(orders.filter((el: IOrder) => el.status === 'created'), 10).map((el, i) => {
+                                    {orders !== undefined && sliceIntoChunks(orders.filter(el => el.status === 'created'), 10).map((el, i) => {
                                         return (
                                             <ul className={FeedStyes.list} key={i}>
                                                 {el.map((chunk, i) => {
