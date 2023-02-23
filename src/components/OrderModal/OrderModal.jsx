@@ -1,11 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/hooks/hooks';
 import CurrentOrder from '../CurrentOrder/CurrentOrder';
 
 
 function OrderModal() {
 
-    const state = useSelector((state) => state);
+    const state = useSelector(state => state);
     const ingredients = state.ingredientsReducer.ingredients;
     const order = state.orderReducer.currentOrder.order;
 
