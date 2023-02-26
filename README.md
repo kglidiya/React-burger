@@ -24,4 +24,9 @@
 ## Ссылка на проект на GitHub: <a href="https://kglidiya.github.io/React-burger/">Stella Burges</a>
 Для перехода кликните на шапку сайта
 
+![alt text](https://github.com/kglidiya/React-burger/blob/main/src/images/Preview1.jpg)
+
+![alt text](https://github.com/kglidiya/React-burger/blob/main/src/images/Preview2.jpg)
+
+![alt text](https://github.com/kglidiya/React-burger/blob/main/src/images/Preview3.jpg)
 
