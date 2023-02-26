@@ -22,5 +22,6 @@
 - npm run start
 
 ## Ссылка на проект на GitHub: <a href="https://kglidiya.github.io/React-burger/">Stella Burges</a>
+Для перехода кликните на шапку сайта
 
 
