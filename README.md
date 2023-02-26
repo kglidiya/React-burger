@@ -21,7 +21,7 @@
 - npm install
 - npm run start
 
-## Ссылка на проект на GitHub: <a href="https://kglidiya.github.io/React-burger/">Stella Burges</a>
+## Ссылка на проект на GitHub Pages: <a href="https://kglidiya.github.io/React-burger/">Stella Burges</a>
 Если при переходе по ссылке выше Вы увидите "page not found", кликните на шапку сайта
 
 ![alt text](https://github.com/kglidiya/React-burger/blob/main/src/images/Preview1.jpg)
